@@ -9,7 +9,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kae-Tempest/Raphael.git"
+    "url": "git+https://github.com/Kae-Tempest/Raphael-V13.git"
+
 
   },
   "keywords": [
@@ -18,9 +19,9 @@
   "author": "Kae",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Kae-Tempest/Raphael/issues"
+    "url": "https://github.com/Kae-Tempest/Raphael-V13/issues"
   },
-  "homepage": "https://github.com/Kae-Tempest/Raphael#readme",
+  "homepage": "https://github.com/Kae-Tempest/Raphael-V13#readme",
   "dependencies": {
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",
