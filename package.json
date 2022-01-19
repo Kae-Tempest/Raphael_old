@@ -1,0 +1,33 @@
+{
+  "name": "discordbot-template",
+  "version": "5.0.0",
+  "description": "Advanced Template",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kae-Tempest/Raphael.git"
+
+  },
+  "keywords": [
+    "Yes"
+  ],
+  "author": "Kae",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kae-Tempest/Raphael/issues"
+  },
+  "homepage": "https://github.com/Kae-Tempest/Raphael#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "child_process": "^1.0.2",
+    "discord.js": "^13.5.0",
+    "fs": "^0.0.1-security",
+    "glob": "^7.2.0",
+    "mariadb": "^2.5.5",
+    "quick.db": "^7.1.3"
+  }
+}
