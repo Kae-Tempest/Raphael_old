@@ -10,7 +10,7 @@ module.exports = async function (client, message, command, isInteraction, intera
     else if (await require("./AnyClientPermissions")(message, command)) return;
     else if (await require("./RequiredAnyRole")(message, command)) return;
     else if (await require("./RequiredRoles")(message, command)) return;
-    else if (await require("./OnlyChannels")(message, command)) return;
+    else if (await require("./OnlyChannels")(client, message, command)) return;
     else if (await require("./OnlyGuilds")(message, command)) return;
     else if (await require("./OnlyUsers")(client, message, command)) return;
     else {

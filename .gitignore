@@ -3,3 +3,5 @@ json.sqlite
 Config.js
 .idea/
 Root/Structures/database/dbConfig.js
+Documentation/
+.github/

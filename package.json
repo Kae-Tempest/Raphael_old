@@ -1,15 +1,14 @@
 {
-  "name": "discordbot-template",
+  "name": "raphael",
   "version": "5.0.0",
-  "description": "Advanced Template",
+  "description": "Rework of Daikenja Discord Bot",
   "main": "bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ."
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kae-Tempest/Raphael-V13.git"
+    "url": "git+https://github.com/Kae-Tempest/Raphael.git"
 
 
   },
@@ -19,9 +18,9 @@
   "author": "Kae",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Kae-Tempest/Raphael-V13/issues"
+    "url": "https://github.com/Kae-Tempest/Raphael/issues"
   },
-  "homepage": "https://github.com/Kae-Tempest/Raphael-V13#readme",
+  "homepage": "https://github.com/Kae-Tempest/Raphael#readme",
   "dependencies": {
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",

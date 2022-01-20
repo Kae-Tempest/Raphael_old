@@ -1,7 +1,7 @@
 const {MessageEmbed} = require('discord.js')
-module.exports = async function (message, command) {
+module.exports = async function (client, message, command) {
     if (!command.onlyGuilds) return false;
-    if (command.onlyGuilds.some(id => id == message.guild.id)) return false;
+    if (command.onlyGuilds.some(id => id === message.guild.id)) return false;
     else {
         let onlyGuilds = []
         command.onlyGuilds.forEach(id => {
