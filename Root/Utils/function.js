@@ -8,31 +8,27 @@ module.exports = client => {
             });
         if (data) return data[0];
     }
-    client.getUser = async member => {
-        const guild = await client.getGuild(member.guild.id)
-        const guildID = guild.GUILD_ID
-        const user = await raphael.query(`select * from raphael.user where GUILD_ID = ${guildID} and USER_ID = ${member.id}`)
-        .then((rows, res, err) => {
-            if (err) throw err;
-            return rows
-        })
-        if(user) return user[0];
-    }
-    client.getMentionUser = async (guild, member) => {
-        const guilds = await client.getGuild(guild.guild.id)
+    client.getUser = async (member, guild) => {
+        const guilds = guild ? await client.getGuild(guild.guild.id) : await client.getGuild(member.guild.id)
         const guildID = guilds.GUILD_ID
-        const user = await raphael.query(`select * from raphael.user where GUILD_ID = ${guildID} and USER_ID = ${member.id}`)
-            .then((rows, res, err) => {
-                if(err) throw err;
+        const user = await raphael.query(`
+            select user.USER_ID, user.GUILD_ID, user.CLASSES, user.RACE, user.INTELLIGENCE, user.ESPRIT, user.AGILITY, user.VITALITY, user.CONSTITUTION, user.ATTAQUE, user.PO, user.EXP, user.LEVEL, equipement.HELMET, equipement.PLASTRON, equipement.PANTALON, equipement.BOTTES
+            from raphael.user
+            inner join raphael.equipement on user.USER_ID = equipement.USER_ID  
+            where user.GUILD_ID = ${guildID}
+            and user.USER_ID = ${member.id}
+            group by user.USER_ID
+            `).then((rows, res, err) => {
+                if (err) throw err;
                 return rows
             })
-        if(user) return user[0]
+        if(user) return user[0];
     }
     client.updateUserInfo = async (member, po, exp, lvl, guild) => {
         if (!po) po = 0;
         if (!exp) exp = 0;
         if (!lvl) lvl = 0;
-        const user = guild ? await client.getMentionUser(guild, member) : await client.getUser(member);
+        const user = guild ? await client.getUser(guild, member) : await client.getUser(member);
         if (user === undefined) return client.message.channel.send('user not found');
         const PO = user.PO + po;
         const EXP = user.EXP + exp;
@@ -44,24 +40,27 @@ module.exports = client => {
         const updatedUserInfo = await client.getUser(member);
         if (updatedUserInfo) return updatedUserInfo
     }
-    client.getStats = async (member,guild) => {
-        const user = guild ? await client.getMentionUser(guild, member) : await client.getUser(member)
-        if (user === undefined) return client.message.channel.send('user not found');
-        const id = user.USER_ID
-        const user_stats = await raphael.query(`select ATTAQUE, CONSTITUTION, VITALITY, ESPRIT, AGILITY, INTELLIGENCE from raphael.user where USER_ID = ${id}`)
-            .then((rows, res, err) => {
-                if(err) throw err;
-                return rows
-            });
-        if(user_stats) return user_stats[0]
+    client.getInventory = async (member, guild) => {
+        const user = guild ? await client.getUser(member, guild) : await client.getUser(member)
+        const inventory = await raphael.query(`select * from raphael.inventaire where inventaire.USER_ID = ${user.USER_ID}`)
+        .then((rows, res, err) => {
+            if(err) throw err;
+            return rows;
+        });
+        if(inventory) return inventory
     }
-    client.getInventaire = async (member, guild) => {
-
+    client.addInventory = async (item, member, guild) => {
+        const user = guild ? await client.getUser(member, guild) : await client.getUser(member)
+        const addItem = await raphael.query(`ìnsert into raphael.inventaire (USER_ID,ITEM_NAME) values (${user.USER_ID}, ${item})`)
+            .then((rows, res, err) => {
+                if(err) throw err
+                return rows
+            })
+        const inventory = client.getInventory(member, guild);
+        if(inventory) return inventory
     }
     /*  TODO : function createMissingInfoOnUser()
-        TODO : function getInventaire()
-        TODO : function getEquipement()
-        TODO : function addInventaire()
+        TODO : function creatUserInfo()
         TODO : function removeInventaire()
         TODO : function addEquipement()
         TODO : function removeEquipement()
