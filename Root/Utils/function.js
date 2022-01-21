@@ -50,8 +50,8 @@ module.exports = client => {
         if(inventory) return inventory
     }
     client.addInventory = async (item, member, guild) => {
-        const user = guild ? await client.getUser(member, guild) : await client.getUser(member)
-        const addItem = await raphael.query(`ìnsert into raphael.inventaire (USER_ID,ITEM_NAME) values (${user.USER_ID}, ${item})`)
+        const user = guild ? await client.getUser(member, guild) : await client.getUser(member);
+        const addItem = await raphael.query(`insert into raphael.inventaire (USER_ID,ITEM_NAME) values (${user.USER_ID}, "${item}")`)
             .then((rows, res, err) => {
                 if(err) throw err
                 return rows
@@ -59,10 +59,25 @@ module.exports = client => {
         const inventory = client.getInventory(member, guild);
         if(inventory) return inventory
     }
-    /*  TODO : function createMissingInfoOnUser()
-        TODO : function creatUserInfo()
-        TODO : function removeInventaire()
-        TODO : function addEquipement()
-        TODO : function removeEquipement()
+    client.removeInventory = async (item, member, guild) => {
+        const user =  guild ? await client.getUser(member, guild) : await client.getUser(member);
+        const removeItem = await raphael.query(`delete from raphael.inventaire where USER_ID = ${user.USER_ID} and ITEM_NAME = "${item}" order by ID DESC limit 1`)
+            .then((rows, res, err) => {
+                if(err) throw err;
+                return rows
+            });
+        const inventory = client.getInventory(member, guild);
+        if(inventory) return inventory
+    }
+    /*  TODO.js : function createMissingInfoOnUser()
+        TODO.js : function creatUserInfo()
+        TODO.js : function addEquipement()
+        TODO.js : function removeEquipement()
+        TODO.js : function getItem()
+        TODO.js : function createItem()
+        TODO.js : function removeItem()
+        TODO.js : function getMonster()
+        TODO.js : function createMonster()
+        TODO.js : function removeMonster()
     */
 }
