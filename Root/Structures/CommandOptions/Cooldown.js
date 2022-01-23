@@ -5,9 +5,9 @@ module.exports = async function (client, message, command, isInteraction, intera
     const currentTime = Date.now()
     const user = message.member.user
     const cooldown = command.cooldown
-    const oldTime = await db.get(`CooldownSystem.${message.guild.id}.${command.name}.${interactionType ?? "Normal"}.${user.id}`) ?? 0
+    const oldTime = await db.get(`CooldownSystem.${command.name}.${interactionType ?? "Normal"}.${user.id}`) ?? 0
     if (Math.floor(currentTime - oldTime) >= cooldown || oldTime === 0) {
-        await db.set(`CooldownSystem.${message.guild.id}.${command.name}.${interactionType ?? "Normal"}.${user.id}`, currentTime)
+        await db.set(`CooldownSystem.${command.name}.${interactionType ?? "Normal"}.${user.id}`, currentTime)
         return false;
     } else {
         if (command.returnCooldown === false || command.returnNoErrors) return true;
