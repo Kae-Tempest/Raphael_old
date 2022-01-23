@@ -1,7 +1,7 @@
 const db = require("quick.db");
 const { MessageEmbed } = require('discord.js')
 module.exports = async function (client, message, command, isInteraction, interactionType) {
-    if (!command.cooldown) return false;
+    if (!command["cooldown"]) return false;
     const currentTime = Date.now()
     const user = message.member.user
     const cooldown = command.cooldown
@@ -10,7 +10,7 @@ module.exports = async function (client, message, command, isInteraction, intera
         await db.set(`CooldownSystem.${command.name}.${interactionType ?? "Normal"}.${user.id}`, currentTime)
         return false;
     } else {
-        if (command.returnCooldown === false || command.returnNoErrors) return true;
+        if (command["returnCooldown"] === false || command.returnNoErrors) return true;
         else {
             message.reply({
                 embeds: [new MessageEmbed()
