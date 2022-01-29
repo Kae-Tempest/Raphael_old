@@ -37,7 +37,10 @@ module.exports = {
         //await client.removeMonster('slime').then(() => console.log('Slime remove'))
         //await client.removeRace('human').then(() => console.log('human remove'))
         //await client.removeClasse('Chevalier', message)
-        const stat = await client.getStats(message.member);
-        console.log(stat)
+        //const stat = await client.getStats(message.member);
+        //console.log(stat)
+        //await client.updateCompetence('attaque', 1, message.member, null, message)
+        //    .then(() => console.log('Attribut added'))
+        await client.createUserInfo(message.member,'Guerrier', 'human', message)
     }
 }

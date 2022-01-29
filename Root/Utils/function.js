@@ -1,7 +1,7 @@
 const { raphael } = require('../Structures/database/connect');
 module.exports = client => {
     client.getGuild = async guild => {
-        const data = await raphael.query(`select * from raphael.guild where GUILD_ID = ${guild}`)
+        const data = await raphael.query(`select * from guild where GUILD_ID = ${guild}`)
             .then((rows, err) => {
                 if (err) throw err;
                 return rows
@@ -16,9 +16,9 @@ module.exports = client => {
             user.CLASSES, user.RACE, user.INTELLIGENCE, user.ESPRIT, user.AGILITY, user.VITALITY, user.CONSTITUTION, user.ATTAQUE,
             user.PO, user.EXP, user.LEVEL,
             equipement.HELMET, equipement.PLASTRON, equipement.PANTALON, equipement.BOTTES, equipement.MH, equipement.OH,
-            equipement.rings, equipement.earrings, equipement.belt, equipement.broach
-            from raphael.user
-            inner join raphael.equipement on user.USER_ID = equipement.USER_ID  
+            equipement.RINGS, equipement.EARRINGS, equipement.BELT, equipement.BROACH
+            from user
+            inner join equipement on user.USER_ID = equipement.USER_ID  
             where user.GUILD_ID = ${guildID}
             and user.USER_ID = ${member.id}
             group by user.USER_ID
@@ -37,7 +37,7 @@ module.exports = client => {
         const PO = user["PO"] + po;
         const EXP = user["EXP"] + exp;
         const LVL = user["LEVEL"] + lvl;
-        const updatedInfo = await raphael.query(`update raphael.user set PO = ${PO}, EXP = ${EXP}, LEVEL = ${LVL}`)
+        const updatedInfo = await raphael.query(`update user set PO = ${PO}, EXP = ${EXP}, LEVEL = ${LVL}`)
             .then((rows, err) => {
                 if(err) throw err;
                 return rows
@@ -48,7 +48,7 @@ module.exports = client => {
     }
     client.getInventory = async (member, guild) => {
         const user = guild ? await client.getUser(member, guild) : await client.getUser(member)
-        const inventory = await raphael.query(`select * from raphael.inventaire where inventaire.USER_ID = ${user["USER_ID"]}`)
+        const inventory = await raphael.query(`select * from inventaire where inventaire.USER_ID = ${user["USER_ID"]}`)
         .then((rows, err) => {
             if(err) throw err;
             return rows;
@@ -57,7 +57,7 @@ module.exports = client => {
     }
     client.addInventory = async (item, member, guild) => {
         const user = guild ? await client.getUser(member, guild) : await client.getUser(member);
-        const addItem = await raphael.query(`insert into raphael.inventaire (USER_ID,ITEM_NAME) values (${user["USER_ID"]}, "${item}")`)
+        const addItem = await raphael.query(`insert into inventaire (USER_ID,ITEM_NAME) values (${user["USER_ID"]}, "${item}")`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
@@ -68,7 +68,7 @@ module.exports = client => {
     }
     client.removeInventory = async (item, member, guild) => {
         const user =  guild ? await client.getUser(member, guild) : await client.getUser(member);
-        const removeItem = await raphael.query(`delete from raphael.inventaire where USER_ID = ${user["USER_ID"]} and ITEM_NAME = "${item}" order by ID DESC limit 1`)
+        const removeItem = await raphael.query(`delete from inventaire where USER_ID = ${user["USER_ID"]} and ITEM_NAME = "${item}" order by ID DESC limit 1`)
             .then((rows, err) => {
                 if(err) throw err;
                 return rows
@@ -78,7 +78,7 @@ module.exports = client => {
         if(inventory) return inventory
     }
     client.getItem = async item => {
-        const itemInfo = await raphael.query(`select * from raphael.items where ITEM_NAME = "${item}"`)
+        const itemInfo = await raphael.query(`select * from items where ITEM_NAME = "${item}"`)
             .then((rows, err) => {
                 if(err) throw err;
                 return rows
@@ -96,7 +96,7 @@ module.exports = client => {
         if(emplacement === undefined) return message.reply('Missing Data');
         const itemInfo = await client.getItem(name);
         if(itemInfo !== undefined) return message.reply('Item already exist');
-        const newItem = await raphael.query(`insert into raphael.items 
+        const newItem = await raphael.query(`insert into items 
             (ITEM_NAME, ATTAQUE, CONSTITUTION, VITALITY, AGILITY, INTELLIGENCE, ESPRIT, EMPLACEMENT) 
             values ("${name}", ${attaque}, ${constitution}, ${vitality}, ${agility}, ${intelligence}, ${esprit}, "${emplacement}")
             `).then((rows, err) => {
@@ -120,7 +120,7 @@ module.exports = client => {
             if (user["HELMET"] !== 'vide') {
                 await client.replaceEquipement(user["HELMET"], item, member, guild, emplacement);
             } else {
-                await raphael.query(`update raphael.equipement set HELMET = '${item}'`)
+                await raphael.query(`update equipement set HELMET = '${item}'`)
                     .then((rows, err) => {
                         if(err) throw err
                         return rows
@@ -130,7 +130,7 @@ module.exports = client => {
             if(user["PLASTRON"] !== 'vide') {
                 await client.replaceEquipement(user["PLASTRON"], item,  member, guild, emplacement);
             } else {
-                await raphael.query(`update raphael.equipement set PLASTRON = '${item}'`)
+                await raphael.query(`update equipement set PLASTRON = '${item}'`)
                     .then((rows, err) => {
                         if(err) throw err
                         return rows
@@ -140,7 +140,7 @@ module.exports = client => {
             if(user["PANTALON"] !== 'vide') {
                 await client.replaceEquipement(user["PANTALON"], item, member, guild, emplacement);
             } else {
-                await raphael.query(`update raphael.equipement set PANTALON = '${item}'`)
+                await raphael.query(`update equipement set PANTALON = '${item}'`)
                     .then((rows, err) => {
                         if(err) throw err
                         return rows
@@ -150,7 +150,7 @@ module.exports = client => {
             if(user["BOTTES"] !== 'vide') {
                 await client.replaceEquipement(user["BOTTES"], item, member, guild, emplacement);
             } else {
-                await raphael.query(`update raphael.equipement set BOTTES = '${item}'`)
+                await raphael.query(`update equipement set BOTTES = '${item}'`)
                     .then((rows, err) => {
                         if(err) throw err
                         return rows
@@ -160,7 +160,7 @@ module.exports = client => {
             if(user["MH"] !== 'vide') {
                 await client.replaceEquipement(user["MH"], item, member, guild, emplacement);
             } else {
-                await raphael.query(`update raphael.equipement set MH = '${item}'`)
+                await raphael.query(`update equipement set MH = '${item}'`)
                     .then((rows, err) => {
                         if(err) throw err
                         return rows
@@ -170,47 +170,47 @@ module.exports = client => {
             if(user["OH"] !== 'vide') {
                 await client.replaceEquipement(user["OH"], item, member, guild, emplacement);
             } else {
-                await raphael.query(`update raphael.equipement set OH = '${item}'`)
+                await raphael.query(`update equipement set OH = '${item}'`)
                     .then((rows, err) => {
                         if(err) throw err
                         return rows
                     })
             }
-        } else if (EmplacementName.filter(n => n === 'rings')[0] === emplacement) {
-            if(user["rings"] !== 'vide') {
-                await client.replaceEquipement(user["rings"], item, member, guild, emplacement);
+        } else if (EmplacementName.filter(n => n === 'RINGS')[0] === emplacement) {
+            if(user["RINGS"] !== 'vide') {
+                await client.replaceEquipement(user["RINGS"], item, member, guild, emplacement);
             } else {
-                await raphael.query(`update raphael.equipement set rings = '${item}'`)
+                await raphael.query(`update equipement set rings = '${item}'`)
                     .then((rows, err) => {
                         if(err) throw err
                         return rows
                     })
             }
-        } else if (EmplacementName.filter(n => n === 'broach')[0] === emplacement) {
-            if(user["broach"] !== 'vide') {
-                await client.replaceEquipement(user['broach'], item, member, guild, emplacement);
+        } else if (EmplacementName.filter(n => n === 'BROACH')[0] === emplacement) {
+            if(user["BROACH"] !== 'vide') {
+                await client.replaceEquipement(user['BROACH'], item, member, guild, emplacement);
             } else {
-                await raphael.query(`update raphael.equipement set broach = '${item}'`)
+                await raphael.query(`update equipement set broach = '${item}'`)
                     .then((rows, err) => {
                         if(err) throw err
                         return rows
                     })
             }
-        } else if (EmplacementName.filter(n => n === 'belt')[0] === emplacement) {
-            if(user["belt"] !== 'vide') {
-                await client.replaceEquipement(user["belt"], item, member, guild, emplacement);
+        } else if (EmplacementName.filter(n => n === 'BELT')[0] === emplacement) {
+            if(user["BELT"] !== 'vide') {
+                await client.replaceEquipement(user["BELT"], item, member, guild, emplacement);
             } else {
-                await raphael.query(`update raphael.equipement set belt = '${item}'`)
+                await raphael.query(`update equipement set belt = '${item}'`)
                     .then((rows, err) => {
                         if(err) throw err
                         return rows
                     })
             }
-        } else if (EmplacementName.filter(n => n === 'earrings')[0] === emplacement) {
-            if(user["earrings"] !== 'vide') {
-                await client.replaceEquipement(user["earrings"], item, member, guild, emplacement)
+        } else if (EmplacementName.filter(n => n === 'EARRINGS')[0] === emplacement) {
+            if(user["EARRINGS"] !== 'vide') {
+                await client.replaceEquipement(user["EARRINGS"], item, member, guild, emplacement)
             } else {
-                await raphael.query(`update raphael.equipement set earrings = '${item}'`)
+                await raphael.query(`update equipement set earrings = '${item}'`)
                     .then((rows, err) => {
                         if(err) throw err
                         return rows
@@ -237,7 +237,7 @@ module.exports = client => {
     client.removeEquipement = async (item, emplacement, member, guild, message) => {
         const user = guild ? await client.getUser(member, guild) : await client.getUser(member);
         if(user[`${emplacement}`] === 'vide') return message.reply('Any Item Equiped')
-        const removeEquipement = await raphael.query(`update raphael.equipement set ${emplacement} = 'vide' where USER_ID = ${user["USER_ID"]}`)
+        const removeEquipement = await raphael.query(`update equipement set ${emplacement} = 'vide' where USER_ID = ${user["USER_ID"]}`)
             .then((rows, err) => {
                 if(err) throw err;
                 return rows
@@ -248,10 +248,10 @@ module.exports = client => {
     client.removeItem = async (name, message) => {
         const item = await client.getItem(name);
         if(!item) return message.reply('Item doesn\'t exist');
-        await raphael.query(`delete from raphael.items where ITEM_NAME = '${name}'`)
+        await raphael.query(`delete from items where ITEM_NAME = '${name}'`)
     }
     client.getMonster = async monster => {
-        const monsterInfo = await raphael.query(`select * from raphael.monster where MONSTER_NAME = '${monster}'`)
+        const monsterInfo = await raphael.query(`select * from monster where MONSTER_NAME = '${monster}'`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
@@ -266,7 +266,7 @@ module.exports = client => {
         if(agility === undefined) return message.reply('Missing Data');
         const monsterInfo = await client.getMonster(name);
         if(monsterInfo["MONSTER_NAME"] === name) return message.reply('Monster already exist');
-        const newMonster = await raphael.query(`insert into raphael.monster (MONSTER_NAME, ATTAQUE, CONSTITUTION, VITALITY, AGILITY)
+        const newMonster = await raphael.query(`insert into monster (MONSTER_NAME, ATTAQUE, CONSTITUTION, VITALITY, AGILITY)
                 values ('${name}', ${attaque}, ${constitution} , ${vitality}, ${agility})`)
             .then((rows, err) => {
                 if(err) throw err
@@ -277,21 +277,21 @@ module.exports = client => {
     client.removeMonster = async (name, message) => {
         const monster = await client.getMonster(name);
         if(!monster) return message.reply('Monster doesn\'t exist');
-        await raphael.query(`delete from raphael.monster where MONSTER_NAME = '${name}'`)
+        await raphael.query(`delete from monster where MONSTER_NAME = '${name}'`)
     }
     client.createUserInfo = async (member, classe, race, message) => {
         const userInfo = await client.getUser(member);
         const ClasseInfo = await client.getClasse(classe)
         if(userInfo) return message.reply('You have already character on this server');
-        const user = await raphael.query(`insert into raphael.user (USER_ID, GUILD_ID, CLASSES, RACE, INTELLIGENCE, ESPRIT, AGILITY, VITALITY, CONSTITUTION, ATTAQUE, PO, EXP, LEVEL)
+        const user = await raphael.query(`insert into user (USER_ID, GUILD_ID, CLASSES, RACE, INTELLIGENCE, ESPRIT, AGILITY, VITALITY, CONSTITUTION, ATTAQUE, PO, EXP, LEVEL, PTC)
             values (${member.id}, ${message.guildId}, '${classe}', '${race}',
-                    ${ClasseInfo["intelligence"]}, ${ClasseInfo["esprit"]}, ${ClasseInfo["agility"]}, ${ClasseInfo["vitality"]}, ${ClasseInfo["constitution"]}, ${ClasseInfo["attaque"]},
-                    50, 0, 1)`)
+                    ${ClasseInfo["INTELLIGENCE"]}, ${ClasseInfo["ESPRIT"]}, ${ClasseInfo["AGILITY"]}, ${ClasseInfo["VITALITY"]}, ${ClasseInfo["CONSTITUTION"]}, ${ClasseInfo["ATTAQUE"]},
+                    50, 0, 1, 0)`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
             })
-        const equipement = await raphael.query(`insert into raphael.equipement values (${member.id}, 'vide', 'vide', 'vide', 'vide', 'vide', 'vide', 'vide', 'vide', 'vide', 'vide')`)
+        const equipement = await raphael.query(`insert into equipement values (${member.id}, 'vide', 'vide', 'vide', 'vide', 'vide', 'vide', 'vide', 'vide', 'vide', 'vide')`)
             .then((rows, err) => {
                 if(err) throw err;
                 return rows
@@ -300,7 +300,7 @@ module.exports = client => {
         if(equipement) return console.log('Equipement User Create !')
     }
     client.getClasse = async classe => {
-        const classeInfo = await raphael.query(`select * from raphael.classes where NAME = '${classe}'`)
+        const classeInfo = await raphael.query(`select * from classes where NAME = '${classe}'`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
@@ -317,7 +317,7 @@ module.exports = client => {
         if(vitality === undefined) return message.reply('Missing Data');
         const classes = await client.getClasse(name)
         if(classes) return message.reply('Classe already exist !')
-        await raphael.query(`insert into raphael.classes values ('${name}', ${attaque}, ${constitution}, ${intelligence}, ${esprit}, ${agility}, ${vitality})`)
+        await raphael.query(`insert into classes values ('${name}', ${attaque}, ${constitution}, ${intelligence}, ${esprit}, ${agility}, ${vitality})`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
@@ -326,14 +326,14 @@ module.exports = client => {
     client.removeClasse = async (name, message) => {
         const classe = await client.getClasse(name)
         if(!classe) return message.reply('Classe doesn\'t exist');
-        await raphael.query(`delete from raphael.classes where NAME = '${name}'`)
+        await raphael.query(`delete from classes where NAME = '${name}'`)
             .then((rows, err) => {
                 if(err) throw err;
                 return rows
             });
     }
     client.getRace = async name => {
-        const race = await raphael.query(`select * from raphael.races where NAME = '${name}'`)
+        const race = await raphael.query(`select * from races where NAME = '${name}'`)
             .then((rows, err) => {
                 if(err) throw err;
                 return rows
@@ -350,7 +350,7 @@ module.exports = client => {
         if(vitality === undefined) return message.reply('Missing Data');
         const raceInfo = await client.getRace(name);
         if(raceInfo) return message.reply('Race already exist');
-        const race = await raphael.query(`insert into raphael.races values ('${name}', ${attaque}, ${constitution}, ${intelligence}, ${esprit}, ${agility}, ${vitality})`)
+        const race = await raphael.query(`insert into races values ('${name}', ${attaque}, ${constitution}, ${intelligence}, ${esprit}, ${agility}, ${vitality})`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
@@ -360,7 +360,7 @@ module.exports = client => {
     client.removeRace = async (name, message) => {
         const race = await client.getRace(name);
         if(!race) return message.reply('Race doesn\'t exist');
-        await raphael.query(`delete from raphael.races where NAME = '${name}'`)
+        await raphael.query(`delete from races where NAME = '${name}'`)
             .then((rows, err) => {
                 if(err) throw err;
                 return rows;
@@ -368,8 +368,6 @@ module.exports = client => {
     }
     client.getStats = async (member, guild) => {
         const user = guild ? await client.getUser(member, guild) : await client.getUser(member)
-        console.log(user['CLASSES'])
-        const classe = await client.getClasse(user['CLASSES']);
         const race = await client.getRace(user['RACE']);
         const helmetStat = await client.getItem(user['HELMET']);
         let helmetAtk, helmetConsti, helmetIntel, helmetEsp ,helmetAgi , helmetVita
@@ -411,7 +409,7 @@ module.exports = client => {
             bottesAgi = bottesStat['AGILITY']
             bottesVita = bottesStat['VITALITY']
         } else bottesAtk = bottesConsti = bottesIntel = bottesEsp = bottesAgi = bottesVita = 0
-        const ringsStat = await client.getItem(user['rings']);
+        const ringsStat = await client.getItem(user['RINGS']);
         let ringsAtk, ringsConsti, ringsIntel, ringsEsp, ringsAgi, ringsVita
         if(ringsStat !== undefined) {
             ringsAtk = ringsStat['ATTAQUE']
@@ -421,7 +419,7 @@ module.exports = client => {
             ringsAgi = ringsStat['AGILITY']
             ringsVita = ringsStat['VITALITY']
         } else ringsAtk = ringsConsti = ringsIntel = ringsEsp = ringsAgi = ringsVita = 0
-        const earringsStat = await client.getItem(user['earrings']);
+        const earringsStat = await client.getItem(user['EARRINGS']);
         let earringsAtk, earringsConsti, earringsIntel, earringsEsp, earringsAgi, earringsVita
         if(earringsStat !== undefined) {
             earringsAtk = earringsStat['ATTAQUE']
@@ -431,7 +429,7 @@ module.exports = client => {
             earringsAgi = earringsStat['AGILITY']
             earringsVita = earringsStat['VITALITY']
         } else earringsAtk = earringsConsti = earringsIntel = earringsEsp = earringsAgi = earringsVita = 0
-        const broachStat = await client.getItem(user['broach']);
+        const broachStat = await client.getItem(user['BROACH']);
         let broachAtk, broachConsti, broachIntel, broachEsp, broachAgi, broachVita
         if(broachStat !== undefined) {
             broachAtk = broachStat['ATTAQUE']
@@ -441,7 +439,7 @@ module.exports = client => {
             broachAgi = broachStat['AGILITY']
             broachVita = broachStat['VITALITY']
         } else broachAtk = broachConsti = broachIntel = broachEsp = broachAgi = broachVita = 0
-        const betlStat = await client.getItem(user['belt']);
+        const betlStat = await client.getItem(user['BELT']);
         let beltAtk, beltConsti, beltIntel, beltEsp, beltAgi, beltVita
         if(betlStat !== undefined) {
             beltAtk = betlStat['ATTAQUE']
@@ -472,17 +470,32 @@ module.exports = client => {
             OHVita = offHandStat['VITALITY']
         } else OHAtk = OHConsti = OHIntel = OHEsp = OHAgi = OHVita = 0
 
-        const Atk = user['ATTAQUE'] + classe['ATTAQUE'] + race['ATTAQUE'] + helmetAtk + plastronAtk + pantAtk + bottesAtk + ringsAtk + earringsAtk + beltAtk + broachAtk + MHAtk + OHAtk
-        const Consti = user['CONSTITUTION'] + classe['CONSTITUTION'] + race['CONSTITUTION'] + helmetConsti + plastronConsti + pantConsti + bottesConsti + ringsConsti + earringsConsti + beltConsti + broachConsti + MHConsti + OHConsti
-        const Intel = user['INTELLIGENCE'] + classe['INTELLIGENCE'] + race['INTELLIGENCE'] + helmetIntel + plastronIntel + pantIntel + bottesIntel + ringsIntel + earringsIntel + beltIntel + broachIntel + MHIntel + OHIntel
-        const Esp = user['ESPRIT'] + classe['ESPRIT'] + race['ESPRIT'] + helmetEsp + plastronEsp + pantEsp + bottesEsp + ringsEsp + earringsEsp + beltEsp + broachEsp + MHEsp + OHEsp
-        const Agi = user['AGILITY'] + classe['AGILITY'] + race['AGILITY'] + helmetAgi + plastronAgi + pantAgi + bottesAgi + ringsAgi + earringsAgi + beltAgi + broachAgi + MHAgi + OHAgi
-        const Vita = user['VITALITY'] + classe['VITALITY'] + race['VITALITY'] + helmetVita + plastronVita + pantVita + bottesVita + ringsVita + earringsVita + beltVita + broachVita + MHVita + OHVita
+        const Atk = user['ATTAQUE'] + race['ATTAQUE'] + helmetAtk + plastronAtk + pantAtk + bottesAtk + ringsAtk + earringsAtk + beltAtk + broachAtk + MHAtk + OHAtk
+        const Consti = user['CONSTITUTION'] + race['CONSTITUTION'] + helmetConsti + plastronConsti + pantConsti + bottesConsti + ringsConsti + earringsConsti + beltConsti + broachConsti + MHConsti + OHConsti
+        const Intel = user['INTELLIGENCE'] + race['INTELLIGENCE'] + helmetIntel + plastronIntel + pantIntel + bottesIntel + ringsIntel + earringsIntel + beltIntel + broachIntel + MHIntel + OHIntel
+        const Esp = user['ESPRIT'] + race['ESPRIT'] + helmetEsp + plastronEsp + pantEsp + bottesEsp + ringsEsp + earringsEsp + beltEsp + broachEsp + MHEsp + OHEsp
+        const Agi = user['AGILITY'] + race['AGILITY'] + helmetAgi + plastronAgi + pantAgi + bottesAgi + ringsAgi + earringsAgi + beltAgi + broachAgi + MHAgi + OHAgi
+        const Vita = user['VITALITY'] + race['VITALITY'] + helmetVita + plastronVita + pantVita + bottesVita + ringsVita + earringsVita + beltVita + broachVita + MHVita + OHVita
 
         return {Atk, Consti, Intel, Esp, Agi, Vita}
     }
-    /*
-        -- => a verifier
-        TODO : -- function creatUserInfo()
-    */
+    client.updateCompetence = async (competence, points, member, guild, message) => {
+        if(points === isNaN) return message.reply('You need number');
+        const user = guild ? await client.getUser(member, guild) : await client.getUser(member)
+        if(user['PTC'] === 0) return message.reply('You don\'t have points');
+        if(user['PTC'] < points) return message.reply('You don\'t have enough points');
+        const userAttribut = user[`${competence.toUpperCase()}`]
+        if(userAttribut === undefined) return message.reply('Attribut unknow');
+        const newUserAttribut = userAttribut + points
+        await raphael.query(`update user set ${competence.toUpperCase()} = ${newUserAttribut} where USER_ID = ${user['USER_ID']}`)
+            .then((rows, err) => {
+                if(err) throw err
+                message.reply('Competence point added');
+                return rows
+            });
+    }
 }
+/*
+    -- => a verifier
+    TODO : -- function creatUserInfo()
+*/
