@@ -85,7 +85,7 @@ module.exports = client => {
             });
         if(itemInfo) return itemInfo[0]
     }
-    client.createItem = async (name, attaque, constitution, vitality, agility, intelligence, esprit, emplacement, message) => {
+    client.createItem = async (name, attaque, constitution, vitality, agility, intelligence, esprit, emplacement, price ,message) => {
         if(name === undefined) return message.reply('Missing Data');
         if(attaque === undefined) return message.reply('Missing Data');
         if(constitution === undefined) return message.reply('Missing Data');
@@ -256,18 +256,21 @@ module.exports = client => {
                 if(err) throw err
                 return rows
             });
-        if(monsterInfo) return monsterInfo
+        if(monsterInfo) return monsterInfo[0]
     }
-    client.createMonster = async (name, attaque, constitution, vitality, agility, message) => {
+    client.createMonster = async (name, attaque, constitution, vitality, agility, loot, po, exp, message) => {
         if(name === undefined) return client.reply('Missing Data');
         if(attaque === undefined) return message.reply('Missing Data');
         if(constitution === undefined) return message.reply('Missing Data');
         if(vitality === undefined) return message.reply('Missing Data');
         if(agility === undefined) return message.reply('Missing Data');
+        if(loot === undefined) return message.reply('Missing Data');
+        if(po === undefined) return message.reply('Missing Data');
+        if(exp === undefined) return message.reply('Missing Data');
         const monsterInfo = await client.getMonster(name);
-        if(monsterInfo["MONSTER_NAME"] === name) return message.reply('Monster already exist');
-        const newMonster = await raphael.query(`insert into monster (MONSTER_NAME, ATTAQUE, CONSTITUTION, VITALITY, AGILITY)
-                values ('${name}', ${attaque}, ${constitution} , ${vitality}, ${agility})`)
+        if(monsterInfo !== undefined) if(monsterInfo["MONSTER_NAME"] === name) return message.reply('Monster already exist');
+        const newMonster = await raphael.query(`insert into monster (MONSTER_NAME, ATTAQUE, CONSTITUTION, VITALITY, AGILITY, LOOT, PO, EXP)
+                values ('${name}', ${attaque}, ${constitution} , ${vitality}, ${agility}, '${JSON.stringify(loot)}', ${po}, ${exp})`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
@@ -495,7 +498,3 @@ module.exports = client => {
             });
     }
 }
-/*
-    -- => a verifier
-    TODO : -- function creatUserInfo()
-*/
