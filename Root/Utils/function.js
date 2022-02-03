@@ -14,7 +14,7 @@ module.exports = client => {
         const user = await raphael.query(`
             select user.USER_ID, user.GUILD_ID,
             user.CLASSES, user.RACE, user.INTELLIGENCE, user.ESPRIT, user.AGILITY, user.VITALITY, user.CONSTITUTION, user.ATTAQUE,
-            user.PO, user.EXP, user.LEVEL,
+            user.PO, user.EXP, user.LEVEL, user.PTC,
             equipement.HELMET, equipement.PLASTRON, equipement.PANTALON, equipement.BOTTES, equipement.MH, equipement.OH,
             equipement.RINGS, equipement.EARRINGS, equipement.BELT, equipement.BROACH
             from user
@@ -28,12 +28,17 @@ module.exports = client => {
             })
         if(user) return user[0];
     }
-    client.updateUserInfo = async (member, po, exp, lvl, guild, message) => {
+    client.updateUserInfo = async (memberid, po, exp, lvl, message) => {
         if (!po) po = 0;
         if (!exp) exp = 0;
         if (!lvl) lvl = 0;
-        const user = guild ? await client.getUser(guild, member) : await client.getUser(member);
+        let user = await raphael.query(`select * from user where USER_ID = ${memberid}`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            })
         if (user === undefined) return message.reply('user not found');
+        user = user[0]
         const PO = user["PO"] + po;
         const EXP = user["EXP"] + exp;
         const LVL = user["LEVEL"] + lvl;
@@ -43,8 +48,8 @@ module.exports = client => {
                 return rows
             })
         if (!updatedInfo) console.log('Update User Error !')
-        const updatedUserInfo = await client.getUser(member);
-        if (updatedUserInfo) return updatedUserInfo
+        const updatedUserInfo = await raphael.query(`select * from user where USER_ID = ${memberid}`)
+        if (updatedUserInfo) return updatedUserInfo[0]
     }
     client.getInventory = async (member, guild) => {
         const user = guild ? await client.getUser(member, guild) : await client.getUser(member)
@@ -85,7 +90,7 @@ module.exports = client => {
             });
         if(itemInfo) return itemInfo[0]
     }
-    client.createItem = async (name, attaque, constitution, vitality, agility, intelligence, esprit, emplacement, price ,message) => {
+    client.createItem = async (name, attaque, constitution, vitality, agility, intelligence, esprit, emplacement, price, rarity ,message) => {
         if(name === undefined) return message.reply('Missing Data');
         if(attaque === undefined) return message.reply('Missing Data');
         if(constitution === undefined) return message.reply('Missing Data');
@@ -93,12 +98,14 @@ module.exports = client => {
         if(agility === undefined) return message.reply('Missing Data');
         if(intelligence === undefined) return message.reply('Missing Data');
         if(esprit === undefined) return message.reply('Missing Data');
+        if(price === undefined) return message.reply('Missing Data');
+        if(rarity === undefined) return message.reply('Missing Data');
         if(emplacement === undefined) return message.reply('Missing Data');
         const itemInfo = await client.getItem(name);
         if(itemInfo !== undefined) return message.reply('Item already exist');
         const newItem = await raphael.query(`insert into items 
             (ITEM_NAME, ATTAQUE, CONSTITUTION, VITALITY, AGILITY, INTELLIGENCE, ESPRIT, EMPLACEMENT) 
-            values ("${name}", ${attaque}, ${constitution}, ${vitality}, ${agility}, ${intelligence}, ${esprit}, "${emplacement}")
+            values ("${name}", ${attaque}, ${constitution}, ${vitality}, ${agility}, ${intelligence}, ${esprit},${price}, '${rarity}' "${emplacement}")
             `).then((rows, err) => {
                     if(err) throw err;
                     return rows
@@ -258,19 +265,20 @@ module.exports = client => {
             });
         if(monsterInfo) return monsterInfo[0]
     }
-    client.createMonster = async (name, attaque, constitution, vitality, agility, loot, po, exp, message) => {
+    client.createMonster = async (name, attaque, constitution, vitality, agility, intelligence, loot, po, exp, message) => {
         if(name === undefined) return client.reply('Missing Data');
         if(attaque === undefined) return message.reply('Missing Data');
         if(constitution === undefined) return message.reply('Missing Data');
         if(vitality === undefined) return message.reply('Missing Data');
         if(agility === undefined) return message.reply('Missing Data');
+        if(intelligence === undefined) return message.reply('Missing Data');
         if(loot === undefined) return message.reply('Missing Data');
         if(po === undefined) return message.reply('Missing Data');
         if(exp === undefined) return message.reply('Missing Data');
         const monsterInfo = await client.getMonster(name);
         if(monsterInfo !== undefined) if(monsterInfo["MONSTER_NAME"] === name) return message.reply('Monster already exist');
-        const newMonster = await raphael.query(`insert into monster (MONSTER_NAME, ATTAQUE, CONSTITUTION, VITALITY, AGILITY, LOOT, PO, EXP)
-                values ('${name}', ${attaque}, ${constitution} , ${vitality}, ${agility}, '${JSON.stringify(loot)}', ${po}, ${exp})`)
+        const newMonster = await raphael.query(`insert into monster (MONSTER_NAME, ATTAQUE, CONSTITUTION, VITALITY, AGILITY, INTELLIGENCE, LOOT, PO, EXP)
+                values ('${name}', ${attaque}, ${constitution} , ${vitality}, ${agility}, ${intelligence}, '${JSON.stringify(loot)}', ${po}, ${exp})`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
@@ -473,14 +481,14 @@ module.exports = client => {
             OHVita = offHandStat['VITALITY']
         } else OHAtk = OHConsti = OHIntel = OHEsp = OHAgi = OHVita = 0
 
-        const Atk = user['ATTAQUE'] + race['ATTAQUE'] + helmetAtk + plastronAtk + pantAtk + bottesAtk + ringsAtk + earringsAtk + beltAtk + broachAtk + MHAtk + OHAtk
-        const Consti = user['CONSTITUTION'] + race['CONSTITUTION'] + helmetConsti + plastronConsti + pantConsti + bottesConsti + ringsConsti + earringsConsti + beltConsti + broachConsti + MHConsti + OHConsti
-        const Intel = user['INTELLIGENCE'] + race['INTELLIGENCE'] + helmetIntel + plastronIntel + pantIntel + bottesIntel + ringsIntel + earringsIntel + beltIntel + broachIntel + MHIntel + OHIntel
-        const Esp = user['ESPRIT'] + race['ESPRIT'] + helmetEsp + plastronEsp + pantEsp + bottesEsp + ringsEsp + earringsEsp + beltEsp + broachEsp + MHEsp + OHEsp
-        const Agi = user['AGILITY'] + race['AGILITY'] + helmetAgi + plastronAgi + pantAgi + bottesAgi + ringsAgi + earringsAgi + beltAgi + broachAgi + MHAgi + OHAgi
-        const Vita = user['VITALITY'] + race['VITALITY'] + helmetVita + plastronVita + pantVita + bottesVita + ringsVita + earringsVita + beltVita + broachVita + MHVita + OHVita
+        const ATTAQUE = race['ATTAQUE'] + helmetAtk + plastronAtk + pantAtk + bottesAtk + ringsAtk + earringsAtk + beltAtk + broachAtk + MHAtk + OHAtk
+        const CONSTITUTION =race['CONSTITUTION'] + helmetConsti + plastronConsti + pantConsti + bottesConsti + ringsConsti + earringsConsti + beltConsti + broachConsti + MHConsti + OHConsti
+        const INTELLIGENCE = race['INTELLIGENCE'] + helmetIntel + plastronIntel + pantIntel + bottesIntel + ringsIntel + earringsIntel + beltIntel + broachIntel + MHIntel + OHIntel
+        const ESPRIT = race['ESPRIT'] + helmetEsp + plastronEsp + pantEsp + bottesEsp + ringsEsp + earringsEsp + beltEsp + broachEsp + MHEsp + OHEsp
+        const AGILITY = race['AGILITY'] + helmetAgi + plastronAgi + pantAgi + bottesAgi + ringsAgi + earringsAgi + beltAgi + broachAgi + MHAgi + OHAgi
+        const VITALITY = race['VITALITY'] + helmetVita + plastronVita + pantVita + bottesVita + ringsVita + earringsVita + beltVita + broachVita + MHVita + OHVita
 
-        return {Atk, Consti, Intel, Esp, Agi, Vita}
+        return {ATTAQUE, CONSTITUTION, INTELLIGENCE, ESPRIT, AGILITY, VITALITY}
     }
     client.updateCompetence = async (competence, points, member, guild, message) => {
         if(points === isNaN) return message.reply('You need number');
@@ -496,5 +504,9 @@ module.exports = client => {
                 message.reply('Competence point added');
                 return rows
             });
+    }
+    client.getUserName = async (client, guildid, userid) => {
+        const username = client.guilds.resolve(guildid).members.resolve(userid).user.username
+        if (username) return username
     }
 }
