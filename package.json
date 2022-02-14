@@ -1,6 +1,6 @@
 {
   "name": "raphael",
-  "version": "5.0.0",
+  "version": "1.0.0",
   "description": "Rework of Daikenja Discord Bot",
   "main": "bot.js",
   "scripts": {
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Kae-Tempest/Raphael#readme",
   "dependencies": {
+    "@discordjs/builders": "^0.12.0",
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",
     "common-tags": "^1.8.2",
