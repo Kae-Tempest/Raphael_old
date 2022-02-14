@@ -9,7 +9,7 @@ module.exports = client => {
         if (data) return data[0];
     }
     client.getUser = async (member, guild) => {
-        const guilds = guild ? await client.getGuild(guild.guild.id) : await client.getGuild(member.guild.id)
+        const guilds = guild ? await client.getGuild(guild.id) : await client.getGuild(member.guild.id)
         const guildID = guilds["GUILD_ID"]
         const user = await raphael.query(`
             select user.USER_ID, user.GUILD_ID,
@@ -88,9 +88,15 @@ module.exports = client => {
                 if(err) throw err;
                 return rows
             });
-        if(itemInfo) return itemInfo[0]
+        const craftItemInfo = await raphael.query(`select * from craftitem where ITEM_NAME = "${item}"`)
+            .then((rows, err) => {
+                if(err) throw err;
+                return rows
+            });
+        if(itemInfo[0]) return itemInfo[0]
+        else if(craftItemInfo[0]) return craftItemInfo[0]
     }
-    client.createItem = async (name, attaque, constitution, vitality, agility, intelligence, esprit, emplacement, price, rarity ,message) => {
+    client.createItem = async (name, attaque, constitution, vitality, agility, intelligence, esprit, emplacement, price ,message) => {
         if(name === undefined) return message.reply('Missing Data');
         if(attaque === undefined) return message.reply('Missing Data');
         if(constitution === undefined) return message.reply('Missing Data');
@@ -99,13 +105,12 @@ module.exports = client => {
         if(intelligence === undefined) return message.reply('Missing Data');
         if(esprit === undefined) return message.reply('Missing Data');
         if(price === undefined) return message.reply('Missing Data');
-        if(rarity === undefined) return message.reply('Missing Data');
         if(emplacement === undefined) return message.reply('Missing Data');
         const itemInfo = await client.getItem(name);
         if(itemInfo !== undefined) return message.reply('Item already exist');
         const newItem = await raphael.query(`insert into items 
             (ITEM_NAME, ATTAQUE, CONSTITUTION, VITALITY, AGILITY, INTELLIGENCE, ESPRIT, EMPLACEMENT) 
-            values ("${name}", ${attaque}, ${constitution}, ${vitality}, ${agility}, ${intelligence}, ${esprit},${price}, '${rarity}' "${emplacement}")
+            values ("${name}", ${attaque}, ${constitution}, ${vitality}, ${agility}, ${intelligence}, ${esprit},${price}, "${emplacement}")
             `).then((rows, err) => {
                     if(err) throw err;
                     return rows
@@ -291,12 +296,11 @@ module.exports = client => {
         await raphael.query(`delete from monster where MONSTER_NAME = '${name}'`)
     }
     client.createUserInfo = async (member, classe, race, message) => {
-        const userInfo = await client.getUser(member);
-        const ClasseInfo = await client.getClasse(classe)
-        if(userInfo) return message.reply('You have already character on this server');
+        const userInfo = await client.getUser(member, member.guild);
+        if(userInfo && userInfo['RACE'] !== 'null' && userInfo['CLASSES'] !== 'null') return;
         const user = await raphael.query(`insert into user (USER_ID, GUILD_ID, CLASSES, RACE, INTELLIGENCE, ESPRIT, AGILITY, VITALITY, CONSTITUTION, ATTAQUE, PO, EXP, LEVEL, PTC)
             values (${member.id}, ${message.guildId}, '${classe}', '${race}',
-                    ${ClasseInfo["INTELLIGENCE"]}, ${ClasseInfo["ESPRIT"]}, ${ClasseInfo["AGILITY"]}, ${ClasseInfo["VITALITY"]}, ${ClasseInfo["CONSTITUTION"]}, ${ClasseInfo["ATTAQUE"]},
+                    0,0,0,0,0,0,
                     50, 0, 1, 0)`)
             .then((rows, err) => {
                 if(err) throw err
@@ -504,9 +508,25 @@ module.exports = client => {
                 message.reply('Competence point added');
                 return rows
             });
+        await raphael.query(`update user set PTC = PTC - ${points} where USER_ID = ${user['USER_ID']}`)
     }
     client.getUserName = async (client, guildid, userid) => {
         const username = client.guilds.resolve(guildid).members.resolve(userid).user.username
         if (username) return username
+    }
+    client.getCraftItem = async (itemName, message) => {
+        const craftItem = require('../assets/blueprint.json');
+        const craftItemList = Object.values(craftItem)
+        const existItem = craftItemList.find(item => item.name === itemName);
+        if(existItem === undefined) return message.reply('Unknow BluePrint');
+        return existItem
+    }
+    client.createCraftedItem = async (member, name, strength, constitution, agility, spirit , intelligence, vitality, emplacement) => {
+        await raphael.query(`insert into craftitem (USER_ID, ITEM_NAME, ATTAQUE, CONSTITUTION, AGILITY, ESPRIT, INTELLIGENCE, VITALITY, EMPLACEMENT, PRICE) 
+values (${member.id}, '${name}', ${strength}, ${constitution}, ${agility}, ${spirit}, ${intelligence}, ${vitality}, '${emplacement}', 0)`)
+            .then((rows, err) => {
+                if(err) throw err;
+                return rows
+            });
     }
 }
