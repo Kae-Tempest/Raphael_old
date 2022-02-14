@@ -15,7 +15,7 @@ module.exports = {
         }],
     defaultPermission: 'BAN_MEMBERS',
     description: "Run this to ban a member",
-    run: async(client,message ,interaction) => {
+    run: async(client ,interaction) => {
         if(!interaction.member.permissions.has("BAN_MEMBERS"))
             return interaction.followUp({content: "Tu n'as pas les permissions pour utiliser cette commande", ephemeral: true})
         const user = interaction.options.getUser('user')

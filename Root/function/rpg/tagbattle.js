@@ -106,7 +106,21 @@ const tagbattle = async (client, message, player, player2, monster) => {
                 const name = await client.getUserName(client, player['GUILD_ID'], player['USER_ID']);
                 client.channel.send(`${capitalize(name)} est mort`);
                 if(Player2Hp !== 0)  {
-                    // Ask to revive
+                    try {
+                        message.reply(`${client.getUserName(client, player2['GUILD_ID'], player2['USER_ID'])}, voulez vous résuciter ${name} (5s)`);
+                        const filter = m => (message.mentions.users.first().id === m.mentions.users.first().id);
+                        const userEntry = await message.channel.awaitMessages(filter,{
+                            max: 1, time: 5000, error: ['time']
+                        });
+                        if(userEntry.first().content.toLowerCase() === 'oui') {
+                            const Inventory = await client.getInventory(message.mentions.users.first() ,message.member);
+                            const HItem = Inventory.find(item => item === '' /*Item Name*/ )
+                            if(!HItem) return message.reply('Tu n\'as pas l\'item pour réssucité')
+                            return message.reply(`${name} name est réssucité`);
+                        }
+                    } catch (err) {
+                        message.reply('Vous laisser votre camarade sur le sol pour se tour');
+                    }
                 }
             }
             if(Player2Hp <= 0) {
@@ -118,7 +132,21 @@ const tagbattle = async (client, message, player, player2, monster) => {
                 const name = await client.getUserName(client, player2['GUILD_ID'], player2['USER_ID']);
                 client.channel.reply(`${capitalize(name)} est mort`);
                 if(Player1Hp !== 0)  {
-                    // Ask to revive
+                    try {
+                        message.reply(`${client.getUserName(client, player['GUILD_ID'], player['USER_ID'])}, voulez vous résuciter ${name} (5s)`);
+                        const filter = m => (message.author.id === m.author.id);
+                        const userEntry = await message.channel.awaitMessages(filter,{
+                            max: 1, time: 5000, error: ['time']
+                        });
+                        if(userEntry.first().content.toLowerCase() === 'oui') {
+                            const Inventory = await client.getInventory(message.member);
+                            const HItem = Inventory.find(item => item === '' /*Item Name*/ )
+                            if(!HItem) return message.reply('Tu n\'as pas l\'item pour réssucité')
+                            return message.reply(`${name} name est réssucité`);
+                        }
+                    } catch (err) {
+                        message.reply('Vous laisser votre camarade sur le sol pour se tour');
+                    }
                 }
             }
             if(Player1Hp === 0 && Player2Hp === 0) {

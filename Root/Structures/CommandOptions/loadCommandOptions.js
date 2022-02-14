@@ -1,4 +1,3 @@
-const Discord = require("discord.js")
 module.exports = async function (client, message, command, isInteraction, interactionType) {
     const logChannel = client.channels.cache.get('778288246806806558');
     if (!command) return;

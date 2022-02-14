@@ -65,13 +65,13 @@ const battle = async (client, message, player, monster) => {
                     await client.addInventory(loot, message.member);
                     message.reply(`Tu viens de looter sur \`${monster['MONSTER_NAME']}\` => **${loot}**`);
                 }
-            if(intelligence > MIntel) {
-                await leveling(client, message, UPlayer);
-                return client.channels.resolve('778288246806806558').send(`Félicitations, la bataille est terminée après ${i - 1} tours, ${message.author.username}, il te reste ${UVita}HP, Tu gagne ${MPo.toLocaleString({ minimumFractionDigits: 2})}Gold et ${MExp.toLocaleString({ minimumFractionDigits: 2})}exp !`);
-            } else {
-                await leveling(client, message, UPlayer);
-                return client.channels.resolve('778288246806806558').send(`Félicitations, la bataille est terminée après ${i} tours, ${message.author.username}, il te reste ${UVita}HP, Tu gagne ${MPo.toLocaleString({ minimumFractionDigits: 2})}Gold et ${MExp.toLocaleString({ minimumFractionDigits: 2})}exp !`);
-            }}
+                if(intelligence > MIntel) {
+                    await leveling(client, message, UPlayer);
+                    return client.channels.resolve('778288246806806558').send(`Félicitations, la bataille est terminée après ${i - 1} tours, ${message.author.username}, il te reste ${UVita}HP, Tu gagne ${MPo.toLocaleString({ minimumFractionDigits: 2})}Gold et ${MExp.toLocaleString({ minimumFractionDigits: 2})}exp !`);
+                } else {
+                    await leveling(client, message, UPlayer);
+                    return client.channels.resolve('778288246806806558').send(`Félicitations, la bataille est terminée après ${i} tours, ${message.author.username}, il te reste ${UVita}HP, Tu gagne ${MPo.toLocaleString({ minimumFractionDigits: 2})}Gold et ${MExp.toLocaleString({ minimumFractionDigits: 2})}exp !`);
+                }}
         }
     }
     if (player['CLASSES'] === 'Mage') {
