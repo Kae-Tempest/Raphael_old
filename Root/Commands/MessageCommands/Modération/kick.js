@@ -1,6 +1,9 @@
 const {MessageEmbed} = require('discord.js')
 module.exports = {
     name: 'kick',
+    exemple: '!kick @Kae-Tempest@0001 c\'est le dev',
+    description: 'Permet d\'expulser un utilisateur du server',
+    usage: '!kick [@user] <reason>',
     clientPermissions: ['KICK_MEMBERS'],
     userPermissions: ['KICK_MEMBERS'],
     run : async (client, message, args, logChannel) => {

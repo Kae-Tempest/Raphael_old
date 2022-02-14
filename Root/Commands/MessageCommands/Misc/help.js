@@ -1,58 +1,37 @@
-const {MessageActionRow, MessageSelectMenu} = require('discord.js')
+const {MessageActionRow, MessageSelectMenu} = require('discord.js');
+const Builders = require("@discordjs/builders");
+const {capitalize} = require("../../../function/other/string");
+function createOptionSelectMenu(name, value) {
+    let MenuOption = new Builders.SelectMenuOption();
+
+    MenuOption.setLabel(name);
+    MenuOption.setValue(value);
+    MenuOption.setDescription(`${name} Help Command`)
+
+    return MenuOption
+}
 module.exports = {
     name: 'help',
+    usage: '!help',
+    exemple: '!help',
+    description: 'La commande Help permet de voir l\'utilisation de la commande selectionnée',
     run: async(client, message) => {
+        const commandsList = client.commands.messageCommands
+        const commandName = commandsList.map(cmd => cmd.name)
+        const commandList = [];
+        for(let i = 0; commandName.length > i; i++){
+            if(commandsList.find(cmd => cmd.name === 'eval').name === commandName[i] ) continue;
+            if(commandsList.find(cmd => cmd.name === 'exec').name === commandName[i] ) continue;
+            if(commandsList.find(cmd => cmd.name === 'mute').name === commandName[i] ) continue;
+            if(commandsList.find(cmd => cmd.name === 'test').name === commandName[i] ) continue;
+            if(commandsList.find(cmd => cmd.name === commandName[i]).ownerOnly === true) continue;
+            commandList.push(createOptionSelectMenu(capitalize(commandName[i]), commandName[i]))
+        }
         const rows = new MessageActionRow().addComponents(
             new MessageSelectMenu()
-                .setCustomId('Help')
+                .setCustomId('help')
                 .setPlaceholder('Choose command')
-                .addOptions([
-                    {
-                        label: 'Peche',
-                        description: 'Fishing help command',
-                        value: 'peche'
-                    },{
-                        label: 'Roulette',
-                        description: 'Roulette help command',
-                        value: 'roulette'
-                    },{
-                        label: 'BotInfo',
-                        description: 'BotInfo help command',
-                        value: 'botinfo'
-                    },{
-                        label: 'ServerInfo',
-                        description: 'ServerInfo help command',
-                        value: 'serverinfo'
-                    },{
-                        label: 'UserInfo',
-                        description: 'UserInfo help command',
-                        value: 'userinfo'
-                    },{
-                        label: 'Ban',
-                        description: 'Ban help command',
-                        value: 'ban'
-                    },{
-                        label: 'Kick',
-                        description: 'Kick help command',
-                        value: 'kick'
-                    },{
-                        label: 'Mute',
-                        description: 'Mute help command',
-                        value: 'mute'
-                    },{
-                        label: 'Purge',
-                        description: 'Purge help command',
-                        value: 'purge'
-                    },{
-                        label: 'Ticket',
-                        description: 'Ticket help command',
-                        value: 'ticket'
-                    },{
-                        label: 'Unban',
-                        description: 'Unban help command',
-                        value: 'unban'
-                    },
-                ])
+                .setOptions(commandList)
         )
         message.reply({
             content: 'Help Select Menu',

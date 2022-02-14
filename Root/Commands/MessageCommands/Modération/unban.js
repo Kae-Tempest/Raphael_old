@@ -1,6 +1,9 @@
 const {MessageEmbed} = require('discord.js')
 module.exports = {
     name: 'unban',
+    usage: '!unban [user_id]',
+    exemple: '!unban @812005785940133744',
+    description: 'Permet de débannir un utilisateur',
     clientPermissions: ['BAN_MEMBERS'],
     userPermissions: ['BAN_MEMBERS'],
     run: async (client, message, args, logChannel) => {

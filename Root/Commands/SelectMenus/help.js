@@ -1,16 +1,18 @@
 const { prefix } = require('../../../Config');
-const { stripIndent } = require('common-tags')
+const { stripIndent } = require('common-tags');
 module.exports = {
-    name: "botinfo",
+    name: "help",
     run: async(client, interaction) => {
+        const commandList = client.commands.messageCommands
+        const commands = commandList.find(cmd => cmd.name === interaction.values[0])
         interaction.reply(stripIndent(`
             \`\`\`makefile
-[Help: Command -> BotInfo] 
+[Help: Command -> ${interaction.values[0]}] 
 
-description : Permet d'afficher les informations du bot
+description: ${commands.description}
 
-Utilisation: ${prefix}botinfo
-Exemples: ${prefix}botinfo
+Utilisation: ${commands.usage}
+Exemples: ${commands.exemple}
 
 ---
 

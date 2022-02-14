@@ -1,7 +1,10 @@
 const {MessageEmbed} = require('discord.js')
 module.exports = {
-    name: 'ServerInfo',
+    name: 'serverInfo',
     aliases: ['SI'],
+    usage: '!serverInfo',
+    description: 'Permet de voir les information du server',
+    exemple: '!serverinfo || !SI',
     run: async (client, message) => {
         const guild = message.guild
         const owner = await guild.fetchOwner()

@@ -1,7 +1,11 @@
 const {MessageEmbed} = require('discord.js')
 module.exports = {
     name: 'ticket',
+    description: 'Permet de crée un ticket',
+    usage: '!ticket <Contenue du ticket>',
+    exemple: '!ticket ticket j\'ai un probleme avec la commande ban',
     run : async (client, message, args, logChannel) => {
+        // TODO : Voir avec Quentin pour faire un ticketing plus jolie
         const user = message.author
         if(user.bot) return
         const embed = new MessageEmbed()

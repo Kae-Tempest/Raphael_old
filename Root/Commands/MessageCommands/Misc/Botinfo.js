@@ -3,6 +3,9 @@ const {version} = require('../../../../package.json')
 module.exports = {
     name: 'botinfo',
     aliases: ['BI'],
+    usage: '!botInfo',
+    description: 'Permet de voir les information du bot',
+    exemple: '!botinfo || !BI',
     run: (client, message) => {
         let Hours = Math.floor((client.uptime/1000/60/60) << 0);
         let Min = Math.floor((client.uptime/1000/60) << 0);
@@ -24,7 +27,7 @@ module.exports = {
                 name: `${client.user.username} (${client.user.id})`,
                 iconURL: client.user.displayAvatarURL({dynamic: true})
             })
-            .setDescription(`Owner: [Kae Tempest#0001](https://github.com/kae-tempest)
+            .setDescription(`Owner: [Kae Tempest](https://github.com/kae-tempest)
                 Uptime: ${Hours+"h "+Min+"min "+Sec+"sec "}
                 ---
                 User : ${client.users.cache.size}

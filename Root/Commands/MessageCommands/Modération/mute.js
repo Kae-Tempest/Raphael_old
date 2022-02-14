@@ -1,6 +1,9 @@
 const {MessageEmbed, Permissions} = require('discord.js');
 module.exports = {
     name: 'mute',
+    description: 'Command Work in Progress',
+    usage: '!mute [@user] <reason>',
+    exemple: '!mute @PikaPiki@7883 il dit trop de bétise',
     run: async (client, message, args, logChannel) => {
         return message.reply('Work in progress');
         const member = message.mentions.users.first()
