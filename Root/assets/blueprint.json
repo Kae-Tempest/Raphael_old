@@ -1,0 +1,13 @@
+{
+  "épée": {
+    "name": "épée",
+    "strength": 3,
+    "constitution": 1,
+    "agility": 2,
+    "spirit": 1,
+    "intelligence": 1,
+    "vitality": 2,
+    "materials": ["wood","iron"],
+    "emplacement": "MH"
+  }
+}

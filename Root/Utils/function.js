@@ -62,23 +62,54 @@ module.exports = client => {
     }
     client.addInventory = async (item, member, guild) => {
         const user = guild ? await client.getUser(member, guild) : await client.getUser(member);
-        const addItem = await raphael.query(`insert into inventaire (USER_ID,ITEM_NAME) values (${user["USER_ID"]}, "${item}")`)
-            .then((rows, err) => {
-                if(err) throw err
-                return rows
-            })
-        if(!addItem) return console.log('Add Item Error !')
+        const Inventory = await client.getInventory(member);
+        const HaveItem = Inventory.find(items => items['ITEM_NAME'] === item)
+        const items = await client.getItem(item)
+        if (!HaveItem){
+            const addItem = await raphael.query(`insert into inventaire (USER_ID, ITEM_NAME, CRAFT_ITEM_ID) 
+values (${user["USER_ID"]}, "${item}", ${items['ID'] !== undefined || items['ID'] !== null ? items['ID'] : null})`)
+                .then((rows, err) => {
+                    if (err) throw err
+                    return rows
+                })
+            if(!addItem) return console.log('Add Item Error !');
+        } else if(HaveItem['QUANTITY'] >= 1) {
+            const addItem = await raphael.query(`update inventaire set QUANTITY = ${HaveItem['QUANTITY']} + 1 where ITEM_NAME = '${item}'`)
+                .then((rows, err) => {
+                    if(err) throw err;
+                    return rows
+                })
+            if(!addItem) return console.log('Add Item Error !');
+        }
         const inventory = client.getInventory(member, guild);
         if(inventory) return inventory
     }
     client.removeInventory = async (item, member, guild) => {
         const user =  guild ? await client.getUser(member, guild) : await client.getUser(member);
-        const removeItem = await raphael.query(`delete from inventaire where USER_ID = ${user["USER_ID"]} and ITEM_NAME = "${item}" order by ID DESC limit 1`)
-            .then((rows, err) => {
-                if(err) throw err;
-                return rows
-            });
-        if(!removeItem) return console.log('Remove Item Error !')
+        const Inventory = await client.getInventory(member)
+        const HaveItem = Inventory.find(items => items['ITEM_NAME'] === item);
+        if(HaveItem['QUANTITY'] > 1) {
+            const removeItem = await raphael.query(`update inventaire set QUANTITY = ${HaveItem['QUANTITY']} - 1 where ITEM_NAME = '${item}'`)
+                .then((rows, err) => {
+                    if(err) throw err;
+                    return rows
+                })
+            if(!removeItem) return console.log('Remove Item Error !');
+        } else if (HaveItem['QUANTITY'] === 1){
+            if(item['CRAFT_ITEM_ID'] !== null) {
+                const removeCraftItem = await raphael.query(`delete from craftitem where USER_ID = ${user['USER_ID']} and ITEM_NAME = ${item} and ID = ${item['CRAFT_ITEM_ID']}`)
+                    .then((rows, err) => {
+                        if(err) throw err;
+                        return rows
+                    })
+            }
+            const removeItem = await raphael.query(`delete from inventaire where USER_ID = ${user["USER_ID"]} and ITEM_NAME = "${item}" order by ID DESC limit 1`)
+                .then((rows, err) => {
+                    if (err) throw err;
+                    return rows
+                });
+            if (!removeItem) return console.log('Remove Item Error !');
+        }
         const inventory = client.getInventory(member, guild);
         if(inventory) return inventory
     }
