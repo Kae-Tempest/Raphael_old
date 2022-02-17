@@ -51,7 +51,7 @@ module.exports = {
         const spirit = craftItem['spirit'] * rarity
         const intelligence = craftItem['intelligence'] * rarity
         const vitality = craftItem['vitality'] * rarity
-        const name = `${rarityName}_${args}`
+        const name = `${rarityName} ${args}`
         await client.createCraftedItem(message.member, name ,strength, constitution, agility, spirit, intelligence, vitality, craftItem['emplacement'])
         await client.addInventory(name, message.member);
         const embed = new MessageEmbed()
@@ -60,12 +60,9 @@ module.exports = {
             .addField('Name', `${name}`)
             .addField('Stats',
                 `
-                Attaque : ${strength}
-                Constitution : ${constitution}
-                Agility : ${agility}
-                Esprit : ${spirit}
-                Intelligence : ${intelligence}
-                Vitality : ${vitality}
+                Attaque : ${strength} | Constitution : ${constitution}
+                Agility : ${agility} | Esprit : ${spirit}
+                Intelligence : ${intelligence} | Vitality : ${vitality}
                 `)
             .setTimestamp()
         return message.channel.send({embeds: [embed]})
