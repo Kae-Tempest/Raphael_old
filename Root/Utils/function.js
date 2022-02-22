@@ -39,7 +39,7 @@ module.exports = client => {
             })
         if (user === undefined) return message.reply('user not found');
         user = user[0]
-        const PO = user["PO"] + po;
+        const PO = user["PO"] + (po);
         const EXP = user["EXP"] + exp;
         const LVL = user["LEVEL"] + lvl;
         const updatedInfo = await raphael.query(`update user set PO = ${PO}, EXP = ${EXP}, LEVEL = ${LVL}`)
@@ -52,7 +52,7 @@ module.exports = client => {
         if (updatedUserInfo) return updatedUserInfo[0]
     }
     client.getInventory = async (member, guild) => {
-        const user = guild ? await client.getUser(member, guild) : await client.getUser(member)
+        const user = guild ? await client.getUser(member, guild) : await client.getUser(member);
         const inventory = await raphael.query(`select * from inventaire where inventaire.USER_ID = ${user["USER_ID"]}`)
         .then((rows, err) => {
             if(err) throw err;
@@ -97,7 +97,7 @@ values (${user["USER_ID"]}, "${item}", ${items['ID'] !== undefined || items['ID'
             if(!removeItem) return console.log('Remove Item Error !');
         } else if (HaveItem['QUANTITY'] === 1){
             if(item['CRAFT_ITEM_ID'] !== null) {
-                const removeCraftItem = await raphael.query(`delete from craftitem where USER_ID = ${user['USER_ID']} and ITEM_NAME = ${item} and ID = ${item['CRAFT_ITEM_ID']}`)
+                const removeCraftItem = await raphael.query(`delete from craftitem where USER_ID = ${user['USER_ID']} and ITEM_NAME = '${item}' and ID = ${HaveItem['CRAFT_ITEM_ID']}`)
                     .then((rows, err) => {
                         if(err) throw err;
                         return rows
