@@ -63,11 +63,11 @@ module.exports = client => {
     client.addInventory = async (item, member, guild) => {
         const user = guild ? await client.getUser(member, guild) : await client.getUser(member);
         const Inventory = await client.getInventory(member);
-        const HaveItem = Inventory.find(items => items['ITEM_NAME'] === item)
-        const items = await client.getItem(item)
+        const HaveItem = Inventory.find(items => items['ITEM_NAME'] === item);
+        const items = await client.getItem(item);
         if (!HaveItem){
             const addItem = await raphael.query(`insert into inventaire (USER_ID, ITEM_NAME, CRAFT_ITEM_ID) 
-values (${user["USER_ID"]}, "${item}", ${items['ID'] !== undefined || items['ID'] !== null ? items['ID'] : null})`)
+values (${user["USER_ID"]}, "${item}", ${items['ID'] === undefined ? null : items['ID']})`)
                 .then((rows, err) => {
                     if (err) throw err
                     return rows
@@ -102,6 +102,7 @@ values (${user["USER_ID"]}, "${item}", ${items['ID'] !== undefined || items['ID'
                         if(err) throw err;
                         return rows
                     })
+                if (!removeCraftItem) return console.log('Remove Item Error !');
             }
             const removeItem = await raphael.query(`delete from inventaire where USER_ID = ${user["USER_ID"]} and ITEM_NAME = "${item}" order by ID DESC limit 1`)
                 .then((rows, err) => {
@@ -140,7 +141,7 @@ values (${user["USER_ID"]}, "${item}", ${items['ID'] !== undefined || items['ID'
         const itemInfo = await client.getItem(name);
         if(itemInfo !== undefined) return message.reply('Item already exist');
         const newItem = await raphael.query(`insert into items 
-            (ITEM_NAME, ATTAQUE, CONSTITUTION, VITALITY, AGILITY, INTELLIGENCE, ESPRIT, EMPLACEMENT) 
+            (ITEM_NAME, ATTAQUE, CONSTITUTION, VITALITY, AGILITY, INTELLIGENCE, ESPRIT, PRICE ,EMPLACEMENT) 
             values ("${name}", ${attaque}, ${constitution}, ${vitality}, ${agility}, ${intelligence}, ${esprit},${price}, "${emplacement}")
             `).then((rows, err) => {
                     if(err) throw err;

@@ -3,7 +3,7 @@ module.exports = {
     name: "ready",
     once: true,
     run: async(client) => {
-        client.user.setActivity('Make a Discord Bot', {
+        client.user.setActivity('Création du RPG en cours... Veuillez patienter', {
             type: `PLAYING`,
         })
         console.log(chalk.bold.yellowBright("[Bot] ") + chalk.bold.blueBright(`Connected to ${client.user.tag}`))

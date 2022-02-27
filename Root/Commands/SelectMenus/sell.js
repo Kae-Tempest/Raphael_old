@@ -24,7 +24,6 @@ module.exports = {
                 `)
             .setFooter({text: `${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL({dynamic: true})})
         await interaction.update({
-            /*content : `Voulez-vous vraiment vendre =>  \`${interaction.values[0]}\``,*/
             embeds : [sellembed],
             components: [ChoiceButton]
         });

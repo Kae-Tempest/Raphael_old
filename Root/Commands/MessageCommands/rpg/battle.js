@@ -4,6 +4,7 @@ module.exports = {
     usage: '!battle <monster>',
     exemple: '!battle slime',
     description: 'Permet de combattre le monstre sélectionné',
+    cooldown: 10000,
     run: async (client, message, args) => {
         const monsterName = args.join(' ')
         if(monsterName === '') return message.reply('Tu ne peux pas affronter le vide !')

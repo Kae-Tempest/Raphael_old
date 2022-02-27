@@ -38,6 +38,7 @@ module.exports = {
         description: 'vitality of classe',
         required: true
     }],
+    description: 'Create Classe for rpg ',
     run: async(client ,interaction) => {
         const name = interaction.options.getString('name');
         const strength = interaction.options.getInteger('attaque');

@@ -5,37 +5,37 @@ module.exports = {
     options: [{
         name: 'name',
         type: 'STRING',
-        description: "name of race",
+        description: "name of item",
         required: true
     },{
         name:'attaque',
         type: 'INTEGER',
-        description: 'strength of race',
+        description: 'strength of item',
         required: true
     },{
         name: 'constitution',
         type: 'INTEGER',
-        description: 'constitution of race',
+        description: 'constitution of item',
         required: true
     },{
         name:'agility',
         type: 'INTEGER',
-        description: 'agility of race',
+        description: 'agility of item',
         required: true
     },{
         name: 'esprit',
         type: 'INTEGER',
-        description: 'spirit of race',
+        description: 'spirit of item',
         required: true
     },{
         name:'intelligence',
         type: 'INTEGER',
-        description: 'intelligence of race',
+        description: 'intelligence of item',
         required: true
     },{
         name: 'vitality',
         type: 'INTEGER',
-        description: 'vitality of race',
+        description: 'vitality of item',
         required: true
     },{
         name: 'emplacement',
@@ -48,7 +48,7 @@ module.exports = {
         description: 'Price of Item',
         required: false
     }],
-    description: 'Create Race for rpg',
+    description: 'Create Item for rpg',
     run: async(client ,interaction) => {
         const name = interaction.options.getString('name');
         const strength = interaction.options.getInteger('attaque');
