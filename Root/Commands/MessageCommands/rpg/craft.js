@@ -29,7 +29,7 @@ module.exports = {
                 rarity = 1
                 break;
             case 2:
-                rarityName = 'Rare';
+                rarityName = 'Epic';
                 rarity = 3
                 break;
             case 3:

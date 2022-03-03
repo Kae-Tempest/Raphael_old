@@ -39,7 +39,7 @@ module.exports = client => {
             })
         if (user === undefined) return message.reply('user not found');
         user = user[0]
-        const PO = user["PO"] + (po);
+        const PO = user["PO"] + po;
         const EXP = user["EXP"] + exp;
         const LVL = user["LEVEL"] + lvl;
         const updatedInfo = await raphael.query(`update user set PO = ${PO}, EXP = ${EXP}, LEVEL = ${LVL}`)
@@ -60,21 +60,22 @@ module.exports = client => {
         });
         if(inventory) return inventory
     }
-    client.addInventory = async (item, member, guild) => {
+    client.addInventory = async (item, quantiy, member, guild) => {
+        // TODO : accept item with quantity > 1
         const user = guild ? await client.getUser(member, guild) : await client.getUser(member);
         const Inventory = await client.getInventory(member);
         const HaveItem = Inventory.find(items => items['ITEM_NAME'] === item);
         const items = await client.getItem(item);
         if (!HaveItem){
-            const addItem = await raphael.query(`insert into inventaire (USER_ID, ITEM_NAME, CRAFT_ITEM_ID) 
-values (${user["USER_ID"]}, "${item}", ${items['ID'] === undefined ? null : items['ID']})`)
+            const addItem = await raphael.query(`insert into inventaire (USER_ID, ITEM_NAME, CRAFT_ITEM_ID, QUANTITY) 
+values (${user["USER_ID"]}, "${item}", ${items['ID'] === undefined ? null : items['ID']}, ${quantiy})`)
                 .then((rows, err) => {
                     if (err) throw err
                     return rows
                 })
             if(!addItem) return console.log('Add Item Error !');
         } else if(HaveItem['QUANTITY'] >= 1) {
-            const addItem = await raphael.query(`update inventaire set QUANTITY = ${HaveItem['QUANTITY']} + 1 where ITEM_NAME = '${item}'`)
+            const addItem = await raphael.query(`update inventaire set QUANTITY = ${HaveItem['QUANTITY']} + ${quantiy} where ITEM_NAME = '${item}'`)
                 .then((rows, err) => {
                     if(err) throw err;
                     return rows
@@ -84,12 +85,12 @@ values (${user["USER_ID"]}, "${item}", ${items['ID'] === undefined ? null : item
         const inventory = client.getInventory(member, guild);
         if(inventory) return inventory
     }
-    client.removeInventory = async (item, member, guild) => {
-        const user =  guild ? await client.getUser(member, guild) : await client.getUser(member);
-        const Inventory = await client.getInventory(member)
+    client.removeInventory = async (item,quantity, member, guild) => {
+        const user = guild ? await client.getUser(member, guild) : await client.getUser(member);
+        const Inventory = await client.getInventory(member);
         const HaveItem = Inventory.find(items => items['ITEM_NAME'] === item);
         if(HaveItem['QUANTITY'] > 1) {
-            const removeItem = await raphael.query(`update inventaire set QUANTITY = ${HaveItem['QUANTITY']} - 1 where ITEM_NAME = '${item}'`)
+            const removeItem = await raphael.query(`update inventaire set QUANTITY = ${HaveItem['QUANTITY']} - ${quantity} where ITEM_NAME = '${item}'`)
                 .then((rows, err) => {
                     if(err) throw err;
                     return rows
@@ -556,6 +557,22 @@ values (${user["USER_ID"]}, "${item}", ${items['ID'] === undefined ? null : item
     client.createCraftedItem = async (member, name, strength, constitution, agility, spirit , intelligence, vitality, emplacement) => {
         await raphael.query(`insert into craftitem (USER_ID, ITEM_NAME, ATTAQUE, CONSTITUTION, AGILITY, ESPRIT, INTELLIGENCE, VITALITY, EMPLACEMENT, PRICE) 
 values (${member.id}, '${name}', ${strength}, ${constitution}, ${agility}, ${spirit}, ${intelligence}, ${vitality}, '${emplacement}', 0)`)
+            .then((rows, err) => {
+                if(err) throw err;
+                return rows
+            });
+    }
+    client.updateCraftItem = async (item, strength, constitution, agility, spirit, intelligence, vitality, level) => {
+        await raphael.query(`update craftitem set ATTAQUE = ${item['ATTAQUE'] + strength}, CONSTITUTION = ${item['CONSTITUTION'] + constitution}, AGILITY = ${item['AGILITY'] + agility},
+                     ESPRIT = ${item['ESPRIT'] + spirit}, INTELLIGENCE = ${item['INTELLIGENCE'] + intelligence}, VITALITY = ${item['VITALITY'] + vitality}, LEVEL = ${item['LEVEL'] + level}
+                     where ITEM_NAME = '${item['ITEM_NAME']}'`)
+            .then((rows, err) => {
+                if(err) throw err;
+                return rows
+            });
+    }
+    client.updateChanceEnchant = async (item, chance) => {
+        await raphael.query(`update craftitem set CHANCE = ${item['CHANCE'] + chance} where ITEM_NAME = '${item['ITEM_NAME']}'`)
             .then((rows, err) => {
                 if(err) throw err;
                 return rows

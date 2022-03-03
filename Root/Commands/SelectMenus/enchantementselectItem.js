@@ -1,18 +1,22 @@
 const {raphael} = require("../../Structures/database/connect");
-const {MessageActionRow, MessageEmbed, MessageSelectMenu} = require("discord.js");
+const {MessageActionRow, MessageEmbed, MessageSelectMenu, MessageButton} = require("discord.js");
 const {capitalize} = require("../../function/other/string");
 module.exports = {
-    name: "sell",
+    name: "enchantementselectitem",
     run: async(client, interaction) => {
-        const SelectEnchantForItem = new MessageActionRow().addComponents(
-            new MessageSelectMenu()
-                .setCustomId('SelectedEnchantForItem')
-                .setPlaceholder('Choose an Enchantment')
-                .addOptions(/* Voir comment envoyer l'enchant */)
+        const ChoiceButton = new MessageActionRow().addComponents(
+            new MessageButton()
+                .setCustomId('enchantY')
+                .setLabel('Yes')
+                .setStyle('SUCCESS'),
+            new MessageButton()
+                .setCustomId('enchantN')
+                .setLabel('No')
+                .setStyle('DANGER')
         )
         const item = await client.getItem(interaction.values[0])
         const itemEmbed = new MessageEmbed()
-            .setTitle(`Voulez-vous vraiment vendre => \`${capitalize(interaction.values[0])}\``)
+            .setTitle(`Voulez-vous vraiment enchanter => \`${capitalize(interaction.values[0])}\``)
             .addField('Stats', `
                 Attaque : ${item['ATTAQUE']} | Constitution : ${item['CONSTITUTION']}
                 Agility : ${item['AGILITY']} | Esprit : ${item['ESPRIT']}
@@ -21,7 +25,7 @@ module.exports = {
             .setFooter({text: `${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL({dynamic: true})})
         await interaction.update({
             embeds : [itemEmbed],
-            components: []
+            components: [ChoiceButton]
         });
     }
 }

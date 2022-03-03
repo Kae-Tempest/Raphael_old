@@ -17,9 +17,9 @@ module.exports = {
                     .setColor('RANDOM')
                     .setDescription(`Price: ${ItemInfo['PRICE']}`)
                     .addField("stats:",
-                        `Attaque: \`${Player['ATTAQUE']}\` Constitution: \`${Player['CONSTITUTION']}\`
-                        Esprit: \`${Player['ESPRIT']}\` Intelligence: \`${Player['INTELLIGENCE']}\`
-                        Agility: \`${Player['AGILITY']}\` Vitality: \`${Player['VITALITY']}\`
+                        `Attaque: \`${ItemInfo['ATTAQUE']}\` Constitution: \`${ItemInfo['CONSTITUTION']}\`
+                        Esprit: \`${ItemInfo['ESPRIT']}\` Intelligence: \`${ItemInfo['INTELLIGENCE']}\`
+                        Agility: \`${ItemInfo['AGILITY']}\` Vitality: \`${ItemInfo['VITALITY']}\`
                     `)
                 return message.channel.send({embeds: [showEmbed]});
             }
@@ -29,9 +29,9 @@ module.exports = {
                     .setColor('RANDOM')
                     .setDescription(`Price: ${ItemInfo['PRICE']}`)
                     .addField("stats:",
-                        `Attaque: \`${Player['ATTAQUE']}\` Constitution: \`${Player['CONSTITUTION']}\`
-                        Esprit: \`${Player['ESPRIT']}\` Intelligence: \`${Player['INTELLIGENCE']}\`
-                        Agility: \`${Player['AGILITY']}\` Vitality: \`${Player['VITALITY']}\`
+                        `Attaque: \`${ItemInfo['ATTAQUE']}\` Constitution: \`${ItemInfo['CONSTITUTION']}\`
+                        Esprit: \`${ItemInfo['ESPRIT']}\` Intelligence: \`${ItemInfo['INTELLIGENCE']}\`
+                        Agility: \`${ItemInfo['AGILITY']}\` Vitality: \`${ItemInfo['VITALITY']}\`
                     `)
                     const ChoiceButton = new MessageActionRow().addComponents(
                         new MessageButton()
@@ -43,21 +43,13 @@ module.exports = {
                             .setLabel('No')
                             .setStyle('DANGER')
                     )
-                message.reply({
-                    content: `Confirmez-vous l'achat de \`${ItemInfo['ITEM_NAME'].toLowerCase()}\``,
-                    embeds: [shopEmbed],
-                    components: [ChoiceButton]
-                })
-                    // Make Yes and No script Button
-                /*
-                    if(Player['PO'] < ItemInfo['PRICE']) return message.reply(`Tu n'as pas assez de Po !`);
-                    if(userEntry.first().content.toLowerCase() === 'oui') {
-                        await raphael.query(`update raphael.user set PO = ${Player['PO'] - ItemInfo['PRICE']} where USER_ID = ${Player['USER_ID']}`);
-                        await client.addInventory(item, message.member);
-                        return message.reply(`Tu as bien acheter ${ItemInfo['ITEM_NAME']} pour ${ItemInfo['PRICE']}`)
-                    }
-                 */
+                    message.reply({
+                        content: `Confirmez-vous l'achat de \`${ItemInfo['ITEM_NAME'].toLowerCase()}\``,
+                        embeds: [shopEmbed],
+                        components: [ChoiceButton]
+                    })
             }
         }
+
     }
 }

@@ -14,7 +14,7 @@ const leveling = async (client, message, player,) => {
     if(playerLvl >= 80) BaseExp = 550
     if(playerLvl >= 90) BaseExp = 600
     if(playerLvl >= 99) BaseExp = 1000
-    let addPTC = Math.floor(Math.random() * (4 - 1 + 1)) + 1;
+    let addPTC = Math.floor(Math.random() * 4) + 1;
     if(playerLvl === 100 ) return
     if(playerExp >= BaseExp * playerLvl) {
         const updateUser = await client.updateUserInfo(player['USER_ID'],0,0,1,null, message);
