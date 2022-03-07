@@ -548,7 +548,7 @@ values (${user["USER_ID"]}, "${item}", ${items['ID'] === undefined ? null : item
         if (username) return username
     }
     client.getCraftItem = async (itemName, message) => {
-        const craftItem = require('../assets/blueprint.json');
+        const craftItem = require('../assets/data/blueprint.json');
         const craftItemList = Object.values(craftItem)
         const existItem = craftItemList.find(item => item.name === itemName);
         if(existItem === undefined) return message.reply('Unknow BluePrint');

@@ -1,4 +1,4 @@
-const itemsEnchantList = require('../../assets/EnchantList.json')
+const itemsEnchantList = require('../../assets/data/EnchantList.json')
 const {MessageEmbed} = require("discord.js");
 module.exports = {
     name: "enchantY",

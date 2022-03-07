@@ -1,0 +1,32 @@
+[
+  {
+    "levelItem": 0,
+    "po": 3000,
+    "MH": {
+      "ATTAQUE": 5,
+      "CONSTITUTION": 5,
+      "AGILITY": 5,
+      "ESPRIT": 5,
+      "INTELLIGENCE": 5,
+      "VITALITY": 5
+    },
+    "HELMET": {
+      "ATTAQUE": 1,
+      "CONSTITUTION": 9,
+      "AGILITY": 4,
+      "ESPRIT": 1,
+      "INTELLIGENCE": 6,
+      "VITALITY": 9
+    },
+    "materials": [{
+      "name": "stone of enchanting",
+      "quantity": 10
+    }]
+  },{
+    "levelItem": 1,
+    "materials": [{
+      "name": "stone of enchantment",
+      "quantiy": 15
+    }]
+  }
+]
