@@ -1,5 +1,4 @@
-const {raphael} = require("../../Structures/database/connect");
-const {MessageActionRow, MessageEmbed, MessageSelectMenu, MessageButton} = require("discord.js");
+const {MessageActionRow, MessageEmbed, MessageButton} = require("discord.js");
 const {capitalize} = require("../../function/other/string");
 module.exports = {
     name: "enchantementselectitem",
