@@ -10,6 +10,7 @@ module.exports = {
     run: async (client, message) => {
         const player = await client.getUser(message.member);
         if(!player) message.reply(`Tu n'as pas de fiche profil car tu n'as pas fais la commande \`setup\``);
+        const inventory = await client.getInventory(message.member)
         const canvas = createCanvas(1204,1504);
         const ctx = canvas.getContext('2d');
         let UserIcon = await loadImage(message.author.displayAvatarURL({format: 'png'}))
@@ -37,6 +38,8 @@ module.exports = {
             belt: player['BELT']
         }
 
+        console.log()
+
         ctx.beginPath();
         ctx.lineWidth = 2;
         ctx.strokeStyle = "#FFF";
@@ -55,8 +58,6 @@ module.exports = {
         ctx.textAlign = "center"
         ctx.fillText(`${message.author.username} | ${player['CLASSES']} ${player['RACE']}, de niveau ${player['LEVEL']}`, 600,335);
         ctx.drawImage(UserIcon,940,10,256,256)
-
-        // todo : Make exp bar
 
         ctx.textAlign = "start"
         ctx.font = "40px Arial";
@@ -87,13 +88,21 @@ module.exports = {
         ctx.fillText(`${Object.entries(Stat).map(([key, value]) => `${capitalize(key)} : ${value}`).join('\n')}`,50,600)
 
         ctx.fillStyle = "#FFF";
+        ctx.font = "40px Arial";
+        ctx.fillText("Equipement :", 30,850);
         ctx.font = "30px Arial";
-        ctx.fillText("Equipement :", 30,640);
-        ctx.fillText(`${Object.entries(Equipement).map(([key, value]) => `${capitalize(key)}: ${value}`).join('\n')}`, 40,800);
+        ctx.fillText(`${Object.entries(Equipement).map(([key, value]) => `${capitalize(key)}: ${value}`).join('\n')}`, 50,900);
+
+        ctx.fillStyle = "#FFF";
+        ctx.font = "30px Arial";
+        ctx.fillText("Inventaire:", 550,550);
+        ctx.fillText(`${player['PO']}PO`);
+        ctx.font = "24px arial"
+        ctx.fillText(`${inventory.map(i => i['ITEM_NAME']).length === 0 ? "L'inventaire est vide" : inventory.map(i => `${i['ITEM_NAME']}  x${i['QUANTITY']}`).join("\n")}`, 580, 600)
 
         const profileImage = new MessageAttachment(canvas.toBuffer(), 'profile.png',0);
 
-        message.channel.send({
+        await message.author.send({
             files: [profileImage]
         });
     }
