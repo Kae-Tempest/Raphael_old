@@ -16,11 +16,14 @@ module.exports = {
         if (client.commands.selectMenus.size > 0) console.log(chalk.bold.white("[Handler]") + chalk.bold.green(` Loaded ${client.commands.selectMenus.size} selectMenus.`))
         if (client.commands.slashCommands.size > 0) console.log(chalk.bold.red("[Handler]") + chalk.bold.yellow(` Found ${client.commands.slashCommands.size} slashCommands. Starting to load.`))
         if (client.commands.contextMenus.size > 0) console.log(chalk.bold.greenBright("[Handler]") + chalk.bold.cyanBright(` Found ${client.commands.contextMenus.size} contextMenus. Starting to load.`))
-        let twitchAPI = 'https://api.twitch.tv/helix/streams?user_login=tanuky_&user_login=shyza_of&user_login=maxildan';
+
+        let twitchAPI = 'https://api.twitch.tv/helix/streams?user_login=tanuky_&user_login=shyza_of&user_login=kaetempest';
         (TwitchData = async () => {
-            let res = await fetch(twitchAPI, options);
-            let data = await res.json();
-            sendEmbed(data)
+            setInterval(async () => {
+                let res = await fetch(twitchAPI, options);
+                let data = await res.json();
+                sendEmbed(data)
+            }, 20000)
         })()
         let sendEmbed = (data) => {
             console.log(data.data)
