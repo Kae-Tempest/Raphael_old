@@ -15,7 +15,8 @@ module.exports = async function (client, message, command, isInteraction, intera
     else {
         if (isInteraction) command.run(client, message, logChannel)
         else {
-            ROOT.config.prefix.forEach(prefix => {
+            let Guildprefix = await client.getPrefix(message.guildId)
+            let prefix = Guildprefix.prefix
                 if (!message.content.toLowerCase().startsWith(prefix)) return;
                 const cmdName = message.content.trim().toLowerCase().slice(prefix.length).trim().split(" ")[0]
                 const command = client.commands.messageCommands.get(cmdName) ?? client.commands.messageCommands.get(client.commands.messageCommands.aliases.get(cmdName))
@@ -23,7 +24,6 @@ module.exports = async function (client, message, command, isInteraction, intera
                 let args = message.content.slice(prefix.length).trim()
                 if (args.toLowerCase().startsWith(cmdName)) args = args.slice(cmdName.length).trim().split(" ")
                 command.run(client, message, args, logChannel)
-            })
         }
     }
 }

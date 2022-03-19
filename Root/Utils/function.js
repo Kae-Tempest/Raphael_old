@@ -8,6 +8,20 @@ module.exports = client => {
             });
         if (data) return data[0];
     }
+    client.getPrefix = async guildID => {
+        return await raphael.query(`select prefix from guild where GUILD_ID = ${guildID}`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows[0]
+            })
+    }
+    client.setPrefix = async (prefix, guildID) => {
+        await raphael.query(`update guild set prefix = ${prefix} where GUILd_ID = ${guildID}`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            });
+    }
     client.getUser = async (member, guild) => {
         const guilds = guild ? await client.getGuild(guild.id) : await client.getGuild(member.guild.id)
         const guildID = guilds["GUILD_ID"]
@@ -61,7 +75,6 @@ module.exports = client => {
         if(inventory) return inventory
     }
     client.addInventory = async (item, quantiy, member, guild) => {
-        // TODO : accept item with quantity > 1
         const user = guild ? await client.getUser(member, guild) : await client.getUser(member);
         const Inventory = await client.getInventory(member);
         const HaveItem = Inventory.find(items => items['ITEM_NAME'] === item);
@@ -577,5 +590,60 @@ values (${member.id}, '${name}', ${strength}, ${constitution}, ${agility}, ${spi
                 if(err) throw err;
                 return rows
             });
+    }
+    client.addStreamer = async (name, guildId) => {
+        let streamer = await client.getStreamer(name);
+        if(JSON.parse(streamer['GUILD']).find(guildID => guildID === guildId)) return
+        if(streamer){
+            let guildIDList = JSON.parse(streamer['GUILD'])
+            guildIDList.push(guildId)
+            let guilds = JSON.stringify(guildIDList)
+            await raphael.query(`update twitch set GUILD = '${guilds}' where NAME = '${name}'`)
+                .then((rows, err) => {
+                    if(err) throw err
+                    return rows
+                })
+        } else {
+            await raphael.query(`insert into twitch (NAME, GUILD) values ('${name}', ${guildId}`)
+                .then((rows, err) => {
+                    if (err) throw err
+                    return rows
+                });
+        }
+    }
+    client.getStreamer = async name => {
+        let data = await raphael.query(`select * from twitch where NAME = '${name}'`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            });
+        if (data) return data[0]
+    }
+    client.getAllStreamerName = async () => {
+        let streamerListDB = await raphael.query(`select name from twitch`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            })
+        let streamerList = []
+        for(let i = 0; streamerListDB.length > i; i++){
+            streamerList.push(streamerListDB[i]['name'])
+        }
+        return streamerList
+    }
+
+    client.removeStreamer = async (name,guildID) => {
+        let streamer = await client.getStreamer(name)
+        let Guilds = JSON.parse(streamer['GUILD'])
+        if(Guilds.length > 1) {
+            Guilds.splice(Guilds.indexOf(guildID),1);
+            let guilds = JSON.stringify(Guilds)
+            await raphael.query(`update twitch set GUILD = '${guilds}' where NAME = '${name}'`)
+        }
+        await raphael.query(`delete from twitch where NAME = '${name}' and GUILD = ${guildID}`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            })
     }
 }
