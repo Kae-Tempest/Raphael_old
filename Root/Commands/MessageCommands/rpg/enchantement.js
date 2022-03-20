@@ -12,8 +12,8 @@ function createOptionSelectMenu(label, value) {
 module.exports = {
     name : 'enchantement',
     aliases: ['enchant'],
-    usage: '!(enchant)ement',
-    exemple: '!enchant | !enchantement',
+    usage: '(enchant)ement',
+    exemple: 'enchant | !enchantement',
     description: 'Permet d\'enchanter un item crafté',
     run: async (client, message) => {
         const user = await client.getUser(message.member);

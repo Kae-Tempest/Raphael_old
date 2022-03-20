@@ -1,8 +1,8 @@
 const { battle } = require('../../../function/rpg/battle');
 module.exports = {
     name: 'battle',
-    usage: '!battle <monster>',
-    exemple: '!battle slime',
+    usage: 'battle <monster>',
+    exemple: 'battle slime',
     description: 'Permet de combattre le monstre sélectionné',
     cooldown: 10000,
     run: async (client, message, args) => {

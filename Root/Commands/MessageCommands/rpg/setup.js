@@ -12,8 +12,8 @@ function createOptionSelectMenu(label, value) {
 }
 module.exports = {
     name: 'setup',
-    exemple: '!setup',
-    usage: '!setup',
+    exemple: 'setup',
+    usage: 'setup',
     description: 'Permet de crée et de selectionné sa race et sa classe',
     run: async (client, message) => {
         let user = await client.getUser(message.member)

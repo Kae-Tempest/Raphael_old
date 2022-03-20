@@ -1,7 +1,7 @@
 module.exports = {
     name: 'peche',
-    usage: '!peche',
-    exemple: '!peche',
+    usage: 'peche',
+    exemple: 'peche',
     description: 'permet de pecher pour faire passer le temps',
     run: (client, message) => {
         let number = Math.round(Math.random() * 10)

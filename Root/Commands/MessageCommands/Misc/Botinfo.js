@@ -3,9 +3,9 @@ const {version} = require('../../../../package.json')
 module.exports = {
     name: 'botinfo',
     aliases: ['BI'],
-    usage: '!botInfo',
+    usage: 'botInfo',
     description: 'Permet de voir les information du bot',
-    exemple: '!botinfo || !BI',
+    exemple: 'botinfo || !BI',
     run: (client, message) => {
         let Hours = Math.floor((client.uptime/1000/60/60) << 0);
         let Min = Math.floor((client.uptime/1000/60) << 0);

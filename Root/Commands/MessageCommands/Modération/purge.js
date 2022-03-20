@@ -1,8 +1,8 @@
 const {MessageEmbed} = require('discord.js')
 module.exports = {
     name: 'purge',
-    usage: '!purge <nb_msg>',
-    exemple: '!purge 10',
+    usage: 'purge <nb_msg>',
+    exemple: 'purge 10',
     description: 'Permet de supprimer le nombre de messages donnés',
     clientPermissions: ['MANAGE_MESSAGES'],
     run : async (client, message,args, logChannel) => {

@@ -12,8 +12,8 @@ function createOptionSelectMenu(name, value) {
 }
 module.exports = {
     name: 'help',
-    usage: '!help',
-    exemple: '!help',
+    usage: 'help',
+    exemple: 'help',
     description: 'La commande Help permet de voir l\'utilisation de la commande selectionnée',
     run: async(client, message) => {
         const commandsList = client.commands.messageCommands

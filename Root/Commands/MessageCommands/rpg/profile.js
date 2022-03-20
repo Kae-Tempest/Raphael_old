@@ -4,8 +4,8 @@ const {capitalize} = require("../../../function/other/string");
 
 module.exports = {
     name: 'profile',
-    usage: '!profile',
-    exemple: '!profile',
+    usage: 'profile',
+    exemple: 'profile',
     description: 'Envoie la fiche profile de son personnage du RPG',
     run: async (client, message) => {
         const player = await client.getUser(message.member);

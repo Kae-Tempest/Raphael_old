@@ -1,8 +1,8 @@
 const {MessageEmbed} = require('discord.js')
 module.exports = {
     name: 'ban',
-    usage: '!ban [@user] <reason>',
-    exemple: '!ban @Kae-Tempest@0001 c\'est le dev',
+    usage: 'ban [@user] <reason>',
+    exemple: 'ban @Kae-Tempest@0001 c\'est le dev',
     description: 'Permet de bannir un utilisateur du server',
     clientPermissions: ['BAN_MEMBERS'],
     userPermissions: ['BAN_MEMBERS'],

@@ -1,8 +1,8 @@
 const {tagbattle} = require("../../../function/rpg/tagbattle");
 module.exports = {
     name: 'tagbattle',
-    usage: '!tagbattle @user <monster>',
-    exemple: '!tagbattle @Kae-Tempest#0001 slime',
+    usage: 'tagbattle @user <monster>',
+    exemple: 'tagbattle @Kae-Tempest#0001 slime',
     description: 'Permet de combattre un monstre en duo avec le joueur taggé',
     run: async (client, message, args) => {
         if(args[0] !== message.mentions.first()) return message.reply('Missing TeamMate');

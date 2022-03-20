@@ -1,8 +1,8 @@
 const { donjon } = require('../../../function/rpg/donjon');
 module.exports = {
     name: 'donjon',
-    usage: '!donjon <difficulty[1-10]>',
-    exemple: '!donjon 1',
+    usage: 'donjon <difficulty[1-10]>',
+    exemple: 'donjon 1',
     description: 'Permet de faire un donjon de 100 étage à 1000 étages celon la difficulté',
     run: async (client, message, args) => {
         let difficulty = args[0]

@@ -11,8 +11,8 @@ module.exports = {
 
 description: ${commands.description}
 
-Utilisation: ${commands.usage}
-Exemples: ${commands.exemple}
+Utilisation: ${prefix}${commands.usage}
+Exemples: ${prefix}${commands.exemple}
 
 ---
 

@@ -12,8 +12,8 @@ function createOptionSelectMenu(label, value) {
 }
 module.exports = {
     name: 'sell',
-    usage: '!sell <item_name>',
-    exemple: '!sell épée en bois',
+    usage: 'sell <item_name>',
+    exemple: 'sell épée en bois',
     description: 'Permet de ventre un item',
     run: async (client, message) => {
         const player = await client.getUser(message.member);

@@ -1,8 +1,8 @@
 const {MessageEmbed} = require("discord.js");
 module.exports = {
     name: 'craft',
-    usage: '!craft <item_name>',
-    exemple: '!craft épée',
+    usage: 'craft <item_name>',
+    exemple: 'craft épée',
     description: 'Permet de fabriquer un item',
     run: async (client, message, args) => {
         if(args === '') return message.reply('On craft pas l\'air');

@@ -2,9 +2,9 @@ const {raphael} = require("../../../Structures/database/connect");
 const {MessageEmbed, MessageActionRow, MessageButton} = require("discord.js");
 module.exports = {
     name: 'shop',
-    usage: '!shop show <item> || !shop buy <item>',
+    usage: 'shop show <item> || !shop buy <item>',
     description: 'Permet de voir ou achetez un item',
-    exemple: '!shop show épée en bois || !shop buy épée en bois',
+    exemple: 'shop show épée en bois || !shop buy épée en bois',
     run: async (client, message, args) => {
         const Player = await client.getUser(message.member)
         if(Player === undefined) return message.reply('Player Doesn\'t exist');

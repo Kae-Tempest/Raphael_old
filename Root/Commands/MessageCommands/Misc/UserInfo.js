@@ -2,9 +2,9 @@ const {MessageEmbed} = require('discord.js')
 module.exports = {
     name: 'userInfo',
     aliases: ['UI'],
-    usage: '!userInfo',
+    usage: 'userInfo',
     description: 'Permet de voir les information de l\'utilisateur',
-    exemple: '!userinfo || !UI',
+    exemple: 'userinfo || !UI',
     run: (client, message, args) => {
          const member = args[0] !== '' ? message.mentions.users.first() : message.member
         const embed = new MessageEmbed()
