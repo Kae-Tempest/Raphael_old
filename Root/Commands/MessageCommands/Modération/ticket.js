@@ -4,7 +4,7 @@ module.exports = {
     description: 'Permet de crée un ticket',
     usage: 'ticket <Contenue du ticket>',
     exemple: 'ticket ticket j\'ai un probleme avec la commande ban',
-    run : async (client, message, args, logChannel) => {
+    run : async (client, message, args) => {
         // todo : Voir avec Quentin pour faire un ticketing plus jolie
         const user = message.author
         if(user.bot) return
@@ -19,6 +19,6 @@ module.exports = {
                 iconURL: user.avatarURL()
             })
         message.channel.send("Nous avons reçu votre ticket, on vous répondra dès que possible!")
-        await logChannel.send({embeds: [embed]})
+        await client.channels.resolve('778288246806806558').send({embeds: [embed]})
     }
 }

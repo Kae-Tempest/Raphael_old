@@ -2,7 +2,7 @@ module.exports = {
     name: "setprefix",
     description: "ajoute un streamer a la liste d'annoncement",
     options: [{
-        name: 'name',
+        name: 'prefix',
         type: 'STRING',
         description: 'prefix',
         required: true

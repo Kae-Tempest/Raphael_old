@@ -9,9 +9,8 @@ module.exports = async function(client) {
             if (event.ignoreFile) return;
             if (event.customEvent) event.run(client, Discord);
             client.events.set(event.name, event);
-
-            if (event.once) client.once(event.name, (...args) => event.run(...args, client, Discord));
-            else client.on(event.name, (...args) => event.run(...args, client, Discord));
+            if (event.once) client.once(event.name, (...args) => event.run(client, ...args));
+            else client.on(event.name, (...args) => event.run(client, ...args));
         })
      })
     }

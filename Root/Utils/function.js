@@ -16,7 +16,7 @@ module.exports = client => {
             })
     }
     client.setPrefix = async (prefix, guildID) => {
-        await raphael.query(`update guild set prefix = ${prefix} where GUILd_ID = ${guildID}`)
+        await raphael.query(`update guild set prefix = '${prefix}' where GUILd_ID = ${guildID}`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows

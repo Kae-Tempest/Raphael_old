@@ -1,5 +1,6 @@
 module.exports = async function (client, message, command, isInteraction, interactionType) {
-    const logChannel = client.channels.cache.get('778288246806806558');
+    let GuildInfo = message.guild === null ? undefined : await client.getGuild(message.guild.id)
+    let logChannel = GuildInfo === undefined ? undefined : GuildInfo['LogChannel']
     if (!command) return;
     if (await require("./Cooldown")(client, message, command, isInteraction, interactionType)) return;
     else if (await require("./OwnerOnly")(message, command)) return;

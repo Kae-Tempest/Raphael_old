@@ -1,9 +1,14 @@
 const {MessageEmbed} = require('discord.js')
+const {raphael} = require("../Structures/database/connect");
 module.exports = {
     name: 'guildMemberAdd',
-    run: async (client, message) => {
-        const logChannel = client.channels.cache.get('778288246806806558');
-        const member = message.member
+    run: async (client, member) => {
+        let GuildInfo = await raphael.query(`select * from guild where GUILD_ID = ${member.guild.id}`)
+            .then((rows, err) => {
+                if (err) throw err;
+                return rows[0]
+            });
+        let logChannel = GuildInfo['LogChannel'] === null ? '778288246806806558' : GuildInfo['LogChannel']
         const embed = new MessageEmbed()
             .setAuthor(
                 {name: `${member.user.username} a rejoint le serveur.`,

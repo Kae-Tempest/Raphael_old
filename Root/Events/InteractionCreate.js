@@ -1,6 +1,6 @@
 module.exports = {
     name: "interactionCreate",
-    run: async(interaction, client) => {
+    run: async(client, interaction) => {
         const loadCommandOptions = require(`${ROOT.path}/Root/Structures/CommandOptions/loadCommandOptions`)
         if (interaction.isButton()) loadCommandOptions(client, interaction, client.commands.buttonCommands.get(interaction.customId), true, "Button")
         else if (interaction.isSelectMenu()) loadCommandOptions(client, interaction, client.commands.selectMenus.get(interaction.customId), true, "SelectMenus")
