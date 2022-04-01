@@ -8,6 +8,7 @@ module.exports = {
                 if (err) throw err;
                 return rows[0]
             });
+        console.log(GuildInfo['LogChannel'])
         let logChannel = GuildInfo['LogChannel'] === null ? '778288246806806558' : GuildInfo['LogChannel']
         const embed = new MessageEmbed()
             .setAuthor(
@@ -16,7 +17,7 @@ module.exports = {
                 })
             .setFooter({text: `Membres: ${member.guild.memberCount.toLocaleString()}`})
             .setTimestamp()
-        await logChannel.send({embeds: [embed]})
+        await client.channels.resolve(logChannel).send({embeds: [embed]})
             .then(() => console.log(`guildMemberAdd -> Message envoyé pour ${member.user.tag}.`))
             .catch(() => console.log(`guildMemberAdd -> Le message n'a pas été envoyé pour ${member.user.tag}.`))
     }
