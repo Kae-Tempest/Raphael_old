@@ -35,11 +35,26 @@ module.exports = client => {
             inner join equipement on user.USER_ID = equipement.USER_ID  
             where user.GUILD_ID = ${guildID}
             and user.USER_ID = ${member.id}
-            group by user.USER_ID
             `).then((rows, err) => {
                 if (err) throw err;
                 return rows
             })
+        if(user) return user[0];
+    }
+    client.getAllDataUser = async (member) => {
+        const user = await raphael.query(`
+            select user.USER_ID, user.GUILD_ID,
+            user.CLASSES, user.RACE, user.INTELLIGENCE, user.ESPRIT, user.AGILITY, user.VITALITY, user.CONSTITUTION, user.ATTAQUE,
+            user.PO, user.EXP, user.LEVEL, user.PTC,
+            equipement.HELMET, equipement.PLASTRON, equipement.PANTALON, equipement.BOTTES, equipement.MH, equipement.OH,
+            equipement.RINGS, equipement.EARRINGS, equipement.BELT, equipement.BROACH
+            from user
+            inner join equipement on user.USER_ID = equipement.USER_ID  
+            where user.USER_ID = ${member.id}
+            `).then((rows, err) => {
+            if (err) throw err;
+            return rows
+        })
         if(user) return user[0];
     }
     client.updateUserInfo = async (memberid, po, exp, lvl, message) => {
@@ -67,11 +82,19 @@ module.exports = client => {
     }
     client.getInventory = async (member, guild) => {
         const user = guild ? await client.getUser(member, guild) : await client.getUser(member);
-        const inventory = await raphael.query(`select * from inventaire where inventaire.USER_ID = ${user["USER_ID"]}`)
+        const inventory = await raphael.query(`select * from inventaire where USER_ID = ${user["USER_ID"]}`)
         .then((rows, err) => {
             if(err) throw err;
             return rows;
         });
+        if(inventory) return inventory
+    }
+    client.getAllUserInventory = async member => {
+        const inventory = await raphael.query(`select * from inventaire where USER_ID = ${member['USER_ID'] ?? member.id}`)
+            .then((rows, err) => {
+                if(err) throw err;
+                return rows;
+            })
         if(inventory) return inventory
     }
     client.addInventory = async (item, quantiy, member, guild) => {
@@ -127,6 +150,63 @@ values (${user["USER_ID"]}, "${item}", ${items['ID'] === undefined ? null : item
         }
         const inventory = client.getInventory(member, guild);
         if(inventory) return inventory
+    }
+    client.updateInventoryUserItem = async (item, user, receiver) => {
+        const Userinventory = await client.getAllUserInventory(user)
+        const receiverInventory = await client.getAllUserInventory(receiver)
+        let ItemData = await client.getItem(item)
+        const UserHaveItem = Userinventory.find(items => items['ITEM_NAME'] === ItemData['ITEM_NAME'])
+        const receiverHaveItem = receiverInventory.find(items => items['ITEM_NAME'] === ItemData['ITEM_NAME'])
+        if (!Userinventory) {
+            return await raphael.query(`update inventaire
+                                        set USER_ID = ${receiver.id}
+                                        where ITEM_NAME = '${item}'
+                                          and USER_ID = ${user.id}`)
+                .then((rows, err) => {
+                    if (err) throw err
+                    return rows
+                })
+        }
+        if (UserHaveItem['QUANTITY'] > 1) {
+            await raphael.query(`update inventaire
+                                 set QUANTITY = ${UserHaveItem['QUANTITY'] - 1}
+                                 where USER_ID = ${user.id}
+                                   and ITEM_NAME = '${item}'`)
+                .then((rows, err) => {
+                    if (err) throw err
+                    return rows
+                })
+            if (receiverHaveItem) {
+                if (receiverHaveItem['QUANTITY'] >= 1) {
+                    await raphael.query(`update inventaire
+                                         set QUANTITY = ${receiverHaveItem['QUANTITY'] + 1}
+                                         where USER_ID = ${receiver.id}
+                                           and ITEM_NAMe = '${item}'`)
+                        .then((rows, err) => {
+                            if (err) throw err
+                            return rows
+                        })
+                }
+            } else if(UserHaveItem['QUANTITY'] === 1) {
+                await raphael.query(`update inventaire
+                                     set USER_ID = ${receiver.id}
+                                     where ITEM_NAME = '${item}'
+                                       and USER_ID = ${user.id}`)
+                    .then((rows, err) => {
+                        if (err) throw err
+                        return rows
+                    })
+            } else {
+                let items = await client.getItem(item)
+                await raphael.query(`insert into inventaire (USER_ID, ITEM_NAME, CRAFT_ITEM_ID, QUANTITY)
+                                         values (${receiver.id}, "${item}",
+                                                 ${items['ID'] === undefined ? null : items['ID']}, 1)`)
+                    .then((rows, err) => {
+                        if (err) throw err
+                        return rows
+                    })
+            }
+        }
     }
     client.getItem = async item => {
         const itemInfo = await raphael.query(`select * from items where ITEM_NAME = "${item}"`)
@@ -645,5 +725,39 @@ values (${member.id}, '${name}', ${strength}, ${constitution}, ${agility}, ${spi
                 if(err) throw err
                 return rows
             })
+    }
+    client.getHdv = async (member) => {
+        await raphael.query(`select * from HDV where USER_ID != ${member.id} and isView == false`)
+            .then((err, rows) => {
+                if(err) throw err
+                return rows
+            })
+    }
+    client.getItemHDV = async (member, item) => {
+        await raphael.query(`select * from HDV where USER_ID = ${member.id} and NAME = '${item}'`)
+    }
+    client.addHDV = async (member, item, price, quantity) => {
+        await raphael.query(`insert into HDV (USER_ID, NAME, PRICE, QUANTITY, DATE) values (${member.id}, '${item}', ${price}, ${quantity} ,${Date.now()})`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            })
+    }
+    client.removeHDV = async (member, item) => {
+        await raphael.query(`delete from HDV where USER_ID = ${member.id} and NAME = '${item}'`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            })
+    }
+    client.updateItemHDVTimeOut = async (member, itemName) => {
+        let item = await client.getItemHDV(member, itemName)
+        if(item) {
+            await raphael.query(`update HDV set isView = true where NAME = '${itemName}' and USER_ID = ${member.id}`)
+                .then((rows, err) => {
+                    if(err) throw err
+                    return rows
+                })
+        }
     }
 }
