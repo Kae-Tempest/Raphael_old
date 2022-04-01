@@ -38,8 +38,6 @@ module.exports = {
             belt: player['BELT']
         }
 
-        console.log()
-
         ctx.beginPath();
         ctx.lineWidth = 2;
         ctx.strokeStyle = "#FFF";

@@ -38,7 +38,6 @@ module.exports = {
                 if (HaveItem['QUANTITY'] >= ListMaterials[i]['quantity']){
                     await client.removeInventory(ListMaterials[i]['name'], ListMaterials[i]['quantity'], interaction.member);
                 } else {
-                    console.log('pas prout')
                     return interaction.update({
                         content: `Tu n'as pas assez de ${ListMaterials[i]['name']}`,
                         components: [],
@@ -94,7 +93,6 @@ module.exports = {
         }
         let succesEnchant = (multipliyer * addChance / EmplacementMultipliyer) /(chance * levelItem + 1)
         const succes = Math.round(Math.random() * 100 ) + 1;
-        console.log(succes, succesEnchant)
         if ( succes > succesEnchant ) {
             await client.updateChanceEnchant(item, 1);
             return interaction.update({
