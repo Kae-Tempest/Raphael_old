@@ -1,6 +1,7 @@
 module.exports = {
     name: "messageCreate",
     run: async(client,message ) => {
+        if (message.author.bot) return;
         const loadCommandOptions = require(`${ROOT.path}/Root/Structures/CommandOptions/loadCommandOptions`)
         let Guildprefix = await client.getPrefix(message.guildId)
         let prefix = Guildprefix.prefix
@@ -9,7 +10,6 @@ module.exports = {
             const command = client.commands.messageCommands.get(cmdName) ?? client.commands.messageCommands.get(client.commands.messageCommands.aliases.get(cmdName))
             if (!command) return;
             if (command.allowBots) loadCommandOptions(client, message, command, false)
-            else if (message.author.bot) return;
             else if (command.guildOnly === false) loadCommandOptions(client, message, command, false)
             else if (!message.guild) return;
             else loadCommandOptions(client, message, command, false)
