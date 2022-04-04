@@ -8,7 +8,6 @@ module.exports = {
                 if (err) throw err;
                 return rows[0]
             });
-        console.log(GuildInfo['LogChannel'])
         let logChannel = GuildInfo['LogChannel'] === null ? '778288246806806558' : GuildInfo['LogChannel']
         const embed = new MessageEmbed()
             .setAuthor(

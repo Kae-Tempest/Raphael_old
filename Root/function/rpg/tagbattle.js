@@ -2,7 +2,6 @@ const {raphael} = require('../../Structures/database/connect')
 const {leveling} = require("./leveling");
 const {capitalize} = require("../other/string");
 const tagbattle = async (client, message, player, player2, monster) => {
-    console.log(message)
     const P1Stats = await client.getStats(message.member);
     const P2Stats = await client.getStats(message.mentions.users.first(), message.member);
     const hostile = await client.getMonster(monster)

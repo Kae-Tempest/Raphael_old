@@ -673,8 +673,8 @@ values (${member.id}, '${name}', ${strength}, ${constitution}, ${agility}, ${spi
     }
     client.addStreamer = async (name, guildId) => {
         let streamer = await client.getStreamer(name);
-        if(JSON.parse(streamer['GUILD']).find(guildID => guildID === guildId)) return
         if(streamer){
+            if(JSON.parse(streamer['GUILD']).find(guildID => guildID === guildId)) return
             let guildIDList = JSON.parse(streamer['GUILD'])
             guildIDList.push(guildId)
             let guilds = JSON.stringify(guildIDList)
@@ -684,7 +684,7 @@ values (${member.id}, '${name}', ${strength}, ${constitution}, ${agility}, ${spi
                     return rows
                 })
         } else {
-            await raphael.query(`insert into twitch (NAME, GUILD) values ('${name}', ${guildId}`)
+            await raphael.query(`insert into twitch (NAME, GUILD) values ('${name}', '["${guildId}"]')`)
                 .then((rows, err) => {
                     if (err) throw err
                     return rows
@@ -719,32 +719,41 @@ values (${member.id}, '${name}', ${strength}, ${constitution}, ${agility}, ${spi
             Guilds.splice(Guilds.indexOf(guildID),1);
             let guilds = JSON.stringify(Guilds)
             await raphael.query(`update twitch set GUILD = '${guilds}' where NAME = '${name}'`)
+                .then((rows, err) => {
+                    if(err) throw err;
+                    return rows;
+                })
         }
-        await raphael.query(`delete from twitch where NAME = '${name}' and GUILD = ${guildID}`)
+        await raphael.query(`delete from twitch where NAME = '${name}' and GUILD = '["${guildID}"]'`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
             })
     }
     client.getHdv = async (member) => {
-        await raphael.query(`select * from HDV where USER_ID != ${member.id} and isView == false`)
-            .then((err, rows) => {
+        let data = await raphael.query(`select NAME, USER_ID, QUANTITY, PRICE from hdv where USER_ID != ${member.id} and ISVIEW = true`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            })
+        if(data) return data
+    }
+    client.getItemHDV = async (member, item) => {
+        await raphael.query(`select * from hdv where USER_ID = ${member.id} and NAME = '${item}'`)
+            .then((rows, err) => {
                 if(err) throw err
                 return rows
             })
     }
-    client.getItemHDV = async (member, item) => {
-        await raphael.query(`select * from HDV where USER_ID = ${member.id} and NAME = '${item}'`)
-    }
     client.addHDV = async (member, item, price, quantity) => {
-        await raphael.query(`insert into HDV (USER_ID, NAME, PRICE, QUANTITY, DATE) values (${member.id}, '${item}', ${price}, ${quantity} ,${Date.now()})`)
+        await raphael.query(`insert into hdv (USER_ID, NAME, PRICE, QUANTITY, DATE) values (${member.id}, '${item}', ${price}, ${quantity} ,${Date.now()})`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
             })
     }
     client.removeHDV = async (member, item) => {
-        await raphael.query(`delete from HDV where USER_ID = ${member.id} and NAME = '${item}'`)
+        await raphael.query(`delete from hdv where USER_ID = ${member.id} and NAME = '${item}'`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
@@ -753,7 +762,7 @@ values (${member.id}, '${name}', ${strength}, ${constitution}, ${agility}, ${spi
     client.updateItemHDVTimeOut = async (member, itemName) => {
         let item = await client.getItemHDV(member, itemName)
         if(item) {
-            await raphael.query(`update HDV set isView = true where NAME = '${itemName}' and USER_ID = ${member.id}`)
+            await raphael.query(`update hdv set ISVIEW = true where NAME = '${itemName}' and USER_ID = ${member.id}`)
                 .then((rows, err) => {
                     if(err) throw err
                     return rows
