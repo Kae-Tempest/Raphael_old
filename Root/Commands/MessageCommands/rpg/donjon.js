@@ -1,17 +1,30 @@
-const { donjon } = require('../../../function/rpg/donjon');
+const {donjon} = require('../../../function/rpg/donjon');
+const {MessageActionRow, MessageSelectMenu} = require("discord.js");
+const Builders = require("@discordjs/builders");
+function createOptionSelectMenu(value) {
+    let MenuOption = new Builders.SelectMenuOption();
+    MenuOption.setLabel('Dificulty: ' + value);
+    MenuOption.setValue(`${value}`);
+    return MenuOption;
+}
 module.exports = {
     name: 'donjon',
-    usage: 'donjon <difficulty[1-10]>',
-    exemple: 'donjon 1',
+    usage: 'donjon',
+    exemple: 'donjon ',
     description: 'Permet de faire un donjon de 100 étage à 1000 étages celon la difficulté',
     run: async (client, message, args) => {
-        let difficulty = args[0]
-        if(difficulty === '') return message.reply('Tu doit choissir ta difficulté');
-        if(difficulty >= 10) {
-            difficulty = 10;
-            message.reply('La difficulté a été set a son maximum. (10)');
+        let difficultyList = []
+        for(let i = 1; difficultyList.length < 10; i++){
+            difficultyList.push(createOptionSelectMenu(i))
         }
-        const player = await client.getUser(message.member);
-        await donjon(client, message, player , difficulty)
+        const rows = new MessageActionRow().addComponents(
+            new MessageSelectMenu()
+                .setCustomId('donjon')
+                .setPlaceholder('Select difficulty')
+                .setOptions(difficultyList)
+        )
+        return message.reply({
+            components: [rows]
+        })
     }
 }
