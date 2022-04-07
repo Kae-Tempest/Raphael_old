@@ -8,4 +8,4 @@ Documentation/
 INFO.js
 yarn-error.log
 SQL/
-Root/Commands/MessageCommands/test.js
+!/Root/Commands/MessageCommands/test.js
