@@ -4,7 +4,6 @@ const {capitalize} = require("../other/string");
 const tagbattle = async (client, message, player, player2, monster) => {
     const P1Stats = await client.getStats(message.member);
     const P2Stats = await client.getStats(message.mentions.users.first(), message.member);
-    const hostile = await client.getMonster(monster)
 
     if(player['VITALITY'] <= 0 || player2['VITALITY'] <= 0) return message.reply('Vous ne pouvais pas combatre si l\'un des deux joueurs n\'a pas de HP');
 

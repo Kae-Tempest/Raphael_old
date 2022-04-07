@@ -1,4 +1,3 @@
-const {donjon} = require('../../../function/rpg/donjon');
 const {MessageActionRow, MessageSelectMenu} = require("discord.js");
 const Builders = require("@discordjs/builders");
 function createOptionSelectMenu(value) {
@@ -12,7 +11,7 @@ module.exports = {
     usage: 'donjon',
     exemple: 'donjon ',
     description: 'Permet de faire un donjon de 100 étage à 1000 étages celon la difficulté',
-    run: async (client, message, args) => {
+    run: async (client, message) => {
         let difficultyList = []
         for(let i = 1; difficultyList.length < 10; i++){
             difficultyList.push(createOptionSelectMenu(i))

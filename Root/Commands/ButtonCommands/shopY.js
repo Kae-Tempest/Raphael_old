@@ -1,4 +1,3 @@
-const {raphael} = require("../../Structures/database/connect");
 const {capitalize} = require("../../function/other/string");
 module.exports = {
     name : 'shopY',

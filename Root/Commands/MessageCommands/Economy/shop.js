@@ -1,4 +1,3 @@
-const {raphael} = require("../../../Structures/database/connect");
 const {MessageEmbed, MessageActionRow, MessageButton} = require("discord.js");
 module.exports = {
     name: 'shop',

@@ -1,4 +1,3 @@
-const {MessageEmbed} = require('discord.js')
 const {capitalize} = require("../../../function/other/string");
 module.exports = {
     name: "createrace",

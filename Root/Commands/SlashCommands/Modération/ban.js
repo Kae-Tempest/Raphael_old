@@ -19,7 +19,7 @@ module.exports = {
         if(!interaction.member.permissions.has("BAN_MEMBERS"))
             return interaction.followUp({content: "Tu n'as pas les permissions pour utiliser cette commande", ephemeral: true})
         const user = interaction.options.getUser('user')
-        const member = interaction.guild.members.cache.get(user.id) || await interaction.guild.members.fetch(user.id).catch(err => {})
+        const member = interaction.guild.members.cache.get(user.id) || await interaction.guild.members.fetch(user.id).catch(err => {console.log(err)})
 
         if(!member) return interaction.followUp("😅 | Je ne peux pas avoir les details de se membre");
         const reason = interaction.options.getString('reason');
@@ -35,7 +35,7 @@ module.exports = {
             .setColor('RANDOM')
             .setFooter({text: 'Ban Member'})
             .setTimestamp()
-        await member.user.send(`Tu as étais bannie de **\`${interaction.guild.name}\`** for \`${reason}\``).catch(err => {})
+        await member.user.send(`Tu as étais bannie de **\`${interaction.guild.name}\`** for \`${reason}\``).catch(err => {console.log(err)})
         await member.ban({reason})
         return interaction.followUp({embeds: [ban]})
     }

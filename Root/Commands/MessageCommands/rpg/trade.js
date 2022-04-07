@@ -1,7 +1,7 @@
 const {MessageActionRow, MessageSelectMenu} = require("discord.js");
 const Builders = require("@discordjs/builders");
 const {capitalize} = require("../../../function/other/string");
-function createOptionSelectMenu(label, value) {
+function createOptionSelectMenu(label) {
     let MenuOption = new Builders.SelectMenuOption();
     MenuOption.setLabel(label);
     MenuOption.setValue(label);
