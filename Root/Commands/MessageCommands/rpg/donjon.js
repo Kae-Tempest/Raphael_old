@@ -22,8 +22,11 @@ module.exports = {
                 .setPlaceholder('Select difficulty')
                 .setOptions(difficultyList)
         )
-        return message.reply({
+        message.reply({
             components: [rows]
         })
+        setTimeout(() => {
+            message.delete()
+        },10000)
     }
 }
