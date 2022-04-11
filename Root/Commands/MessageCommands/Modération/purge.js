@@ -22,7 +22,7 @@ module.exports = {
             })
             .setDescription(`**Action**: Purge\n**Nbr de messages**: ${number} message${number <= 1 ? '' : 's'}\n**Salon**: ${message.channel}`)
             .setTimestamp()
-        await logChannel.send({embeds: [embed]})
+        return client.channels.resolve(logChannel).send({embeds: [embed]})
             .catch((err) => console.log(err))
     }
 }
