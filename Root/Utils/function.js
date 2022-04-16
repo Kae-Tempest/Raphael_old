@@ -222,6 +222,14 @@ values (${user["USER_ID"]}, "${item}", ${items['ID'] === undefined ? null : item
         if(itemInfo[0]) return itemInfo[0]
         else if(craftItemInfo[0]) return craftItemInfo[0]
     }
+    client.getAllItem = async () => {
+        let items = await raphael.query(`select ITEM_NAME from items`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            })
+        if(items) return items
+    }
     client.createItem = async (name, attaque, constitution, vitality, agility, intelligence, esprit, emplacement, price ,message) => {
         if(name === undefined) return message.reply('Missing Data');
         if(attaque === undefined) return message.reply('Missing Data');
@@ -768,5 +776,35 @@ values (${member.id}, '${name}', ${strength}, ${constitution}, ${agility}, ${spi
                     return rows
                 })
         }
+    }
+    client.getRecolt = async () => {
+        let recoltable = await raphael.query(`select NAME from recoltable`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            })
+        if(recoltable) return recoltable[Math.floor(Math.random() * (recoltable.length - 1))]
+    }
+    client.addRecolt = async (name, type) => {
+        await raphael.query(`insert into recoltable (NAME, TYPE) values ('${name}', '${type}')`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            })
+    }
+    client.removeRecolt = async (name, type) => {
+        await raphael.query(`delete * from recoltable where NAME = '${name}' and TYPE = '${type}'`)
+            .then((rows, err) => {
+                if(err) throw err
+                return rows
+            })
+    }
+    client.getHordeMonster = async () => {
+        let HordMonster = await raphael.query(`select * from monster order by rand() limit 1`)
+            .then((rows,err) => {
+                if(err) throw err
+                return rows
+            })
+        if(HordMonster) return HordMonster
     }
 }
