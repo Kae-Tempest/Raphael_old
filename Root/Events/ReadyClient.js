@@ -2,8 +2,6 @@ const chalk = require("chalk")
 const {options} = require('../../Config')
 const fetch = require('node-fetch');
 const {MessageEmbed} = require("discord.js");
-const {capitalize} = require("../function/other/string");
-const http = require("http");
 module.exports = {
     name: "ready",
     once: true,
@@ -21,9 +19,9 @@ module.exports = {
         if (client.commands.contextMenus.size > 0) console.log(chalk.bold.greenBright("[Handler]") + chalk.bold.cyanBright(` Found ${client.commands.contextMenus.size} contextMenus. Starting to load.`))
 
         let StreamOnList = [];
-        let streamer = await client.getAllStreamerName();
         (TwitchData = async () => {
             setInterval(async () => {
+                let streamer = await client.getAllStreamerName();
                 let twitchAPI = `https://api.twitch.tv/helix/streams?user_login=${streamer.map(n => n).join('&user_login=')}`;
                 let res = await fetch(twitchAPI, options);
                 let data = await res.json();
@@ -46,7 +44,7 @@ module.exports = {
                         .setThumbnail(StreamerData.data[0]['profile_image_url'])
                         .setDescription(`[${streamList[i]['title']}](https://www.twitch.tv/${streamList[i]['user_login']})`)
                         .addField(`Viewers`, `${streamList[i]['viewer_count']}`, true)
-                        .setImage(`${imgstream}320x180.jpg`)
+                        .setImage(`${imgstream}750x450.jpg`)
                         .setTimestamp()
                     for(let i = 0 ; Guilds.length > i ; i++){
                         let GuildInfo = await client.getGuild(Guilds[i])
