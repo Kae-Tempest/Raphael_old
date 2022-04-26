@@ -29,6 +29,8 @@
     "fs": "^0.0.1-security",
     "glob": "^7.2.0",
     "mariadb": "^2.5.5",
+    "minimist": "^1.2.6",
+    "moment": "^2.29.3",
     "node-fetch": "^2.6.7",
     "quick.db": "^7.1.3"
   }
