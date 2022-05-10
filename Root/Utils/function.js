@@ -739,19 +739,22 @@ values (${member.id}, '${name}', ${strength}, ${constitution}, ${agility}, ${spi
             })
     }
     client.getHdv = async (member) => {
-        let data = await raphael.query(`select NAME, USER_ID, QUANTITY, PRICE from hdv where USER_ID != ${member.id} and ISVIEW = true`)
+        let data = await raphael.query(`select ID,NAME, USER_ID, QUANTITY, PRICE from hdv where USER_ID != ${member.id} and ISVIEW = true`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
             })
         if(data) return data
     }
-    client.getItemHDV = async (member, item) => {
+    client.getUserItemHDV = async (member, item) => {
         await raphael.query(`select * from hdv where USER_ID = ${member.id} and NAME = '${item}'`)
             .then((rows, err) => {
                 if(err) throw err
                 return rows
             })
+    }
+    client.getItemHDV = async item => {
+
     }
     client.addHDV = async (member, item, price, quantity) => {
         await raphael.query(`insert into hdv (USER_ID, NAME, PRICE, QUANTITY, DATE) values (${member.id}, '${item}', ${price}, ${quantity} ,${Date.now()})`)
@@ -768,7 +771,7 @@ values (${member.id}, '${name}', ${strength}, ${constitution}, ${agility}, ${spi
             })
     }
     client.updateItemHDVTimeOut = async (member, itemName) => {
-        let item = await client.getItemHDV(member, itemName)
+        let item = await client.getUserItemHDV(member, itemName)
         if(item) {
             await raphael.query(`update hdv set ISVIEW = true where NAME = '${itemName}' and USER_ID = ${member.id}`)
                 .then((rows, err) => {

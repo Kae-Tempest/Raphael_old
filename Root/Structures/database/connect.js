@@ -4,7 +4,7 @@ const raphael = mariadb.createPool({
     host: host,
     user: user,
     password: password,
-    database: 'raphael',
+    database: 'kaetempest',
     supportBigNumbers: true,
     bigNumberStrings: true
 });

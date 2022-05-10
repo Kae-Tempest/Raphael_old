@@ -6,6 +6,9 @@ module.exports = {
     exemple: 'ticket ticket j\'ai un probleme avec la commande ban',
     run : async (client, message, args) => {
         // todo : Voir avec Quentin pour faire un ticketing plus jolie
+        // * Créér un channel avec le modo qui accepte le ticket et l'user
+        // * envoie une demande de ticket dans un channel ou les modos peuvent le voir
+        // * qu'un modo peut accepter
         const user = message.author
         if(user.bot) return
         const embed = new MessageEmbed()

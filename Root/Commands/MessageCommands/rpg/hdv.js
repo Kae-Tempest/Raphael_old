@@ -1,11 +1,11 @@
 const {MessageActionRow, MessageSelectMenu} = require("discord.js");
 const Builders = require("@discordjs/builders");
 const {capitalize} = require("../../../function/other/string");
-function createOptionSelectMenuBuyHdv(label, quantity, price) {
+function createOptionSelectMenuBuyHdv(label, quantity, price, owner) {
     let MenuOption = new Builders.SelectMenuOption();
     MenuOption.setLabel(label);
     MenuOption.setValue(label);
-    MenuOption.setDescription(`Quantity: ${quantity} | Price: ${price}`)
+    MenuOption.setDescription(`Quantity: ${quantity} | Price: ${price} | Owner: ${owner}`)
     return MenuOption;
 }
 function createOptionSelectMenuShowHdv(label) {
@@ -25,7 +25,7 @@ module.exports = {
             let hdvItem = await client.getHdv(message.member);
             for(let i = 0; hdvItem.length > i ; i++) {
                 let item = await client.getItem(hdvItem[i]['ITEM_NAME']);
-                itemList.push(createOptionSelectMenuBuyHdv(capitalize(item['ITEM_NAME'])))
+                itemList.push(createOptionSelectMenuBuyHdv(capitalize(item['ITEM_NAME']),item['QUANTITY'],item['PRICE'], item['USER_ID']))
             }
             if(itemList == false) return message.reply({content: 'HDV vide'})
             let rows = new MessageActionRow().addComponents(
