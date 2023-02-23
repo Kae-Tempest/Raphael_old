@@ -6,7 +6,7 @@
 </p>
 
 # 『 Project 』
-* Work In Progress
+* /!\ DISCORD V-13 /!\
 
 ## 『 Credits 』
 * [**Handler Creator**](https://github.com/RileCraft)
